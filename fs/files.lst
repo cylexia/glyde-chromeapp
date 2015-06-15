@@ -1,0 +1,23 @@
+#   List the files in the "fs" folder which are to be included              ;
+#   the "path" is always prepended, specify file name as "name[>alias]"     ;
+#   types are "image" and "text".  image loads via storeBinaryFile()        ;
+#                                                                           ;
+#   original embedded scripts still work and are better in most cases!      ;
+
+path=;
+text=srh_dno.app;
+text=com.cylexia.g.lightswitch.app;
+
+#   hospice app                                                             ;
+path=srh_dno/;
+image=back.png>back.bmp;
+image=icon.png;
+text=main.map;
+text=main.script;
+
+#   light switch                                                            ;
+path=com.cylexia.g.lightswitch/;
+image=icon.png;
+image=map.png;
+text=main.script;
+text=res.map;

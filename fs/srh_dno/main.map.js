@@ -1,7 +1,0 @@
-Glyde.storeTextFile( "srh_dno/main.map", [
-    ".img=srh_dno/back.bmp;",
-    "all=3:000000500500;",
-    "entry=3:010093241064;",
-    "value=3:255093241064;"
-  ] );
-

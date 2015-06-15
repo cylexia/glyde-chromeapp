@@ -21,19 +21,19 @@ var Glyde = {
 			
 			Glue.attachPlugin( Glyde.glue, ExtGlyde );
 
-      // to delay launch uncomment the below lines (and the one at end)
-      var df = function() {
+      // to delay launch uncomment the below line (and the 5 at end)
+      //var df = function() {
 			if( FS ) {
 			  FS.init( "/fs/" );
 			  FS.loadFileSystem( "/fs/files.lst", Glyde.showLauncher );
 			} else {
 			  Glyde.showLauncher();
 			}
-      };
-			var b = _.c( "button" );
-			b.addEventListener( "click", df, false );
-			b.appendChild( document.createTextNode( "manual launch" ) );
-			_.e( "launcherview" ).appendChild( b );
+      //};
+			//var b = _.c( "button" );
+			//b.addEventListener( "click", df, false );
+			//b.appendChild( document.createTextNode( "manual launch" ) );
+			//_.e( "launcherview" ).appendChild( b );
 		},
 
 	  runApp: function( s_id ) {

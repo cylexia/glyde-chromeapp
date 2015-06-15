@@ -4,26 +4,22 @@
   <script src="lib/libvectext.js"></script>
   <script src="glue/extglyde.js"></script>
   <script src="glyde.js"></script>
+  <script src="loadfs.js"></script>
   
   <!-- filesystem (put all needed files here) -->
     <!-- helper applications -->
     <script src="fs/browse.exe.js"></script> <!-- browse.exe -->
-  
-    <!-- test stuff -->
-    <script src="fs/test_script.js"></script> <!-- test.script -->
-    <script src="fs/test_icon_bmp.js"></script> <!-- test/icon.bmp -->
-    <script src="fs/test_main_map.js"></script> <!-- test/main.map -->
+    <script src="fs/wget.exe.js"></script> <!-- wget.exe -->
   
     <!-- the (source) unmodified girls app -->
+    <script src="fs/com_test_girls.app.js"></script>
     <script src="fs/com.test.girls/girls.bmp.js"></script>
     <script src="fs/com.test.girls/girls.map.js"></script>
     <script src="fs/com.test.girls/main.script.js"></script>
   <!-- end of filesystem -->
 </head><body>
-  <div id="back" style="width: 100%; height: 100%; text-align: center; overflow: auto">
-    <input type="text" id="prompt" size="50" value="hello" />
-    <button id="testb">Test</button>
-    <button id="test_girls">Run Girls App</button>
+  <div id="launcherview" style="overflow: auto; height: 100%"></div>
+  <div id="runtimeview" style="width: 100%; height: 100%; text-align: center; overflow: auto;display: none">
 	  <canvas id="test" width="640" height="480" style="margin: auto"></canvas>
 	</div>
 	<div id="glyde_assets" style="display:none">

@@ -6,7 +6,7 @@
  */
 chrome.app.runtime.onLaunched.addListener(function(launchData) {
   chrome.app.window.create(
-    'canvasclick.html',
+    'glyde.html',
     {
       id: 'mainWindow',
       bounds: {width: 800, height: 600}

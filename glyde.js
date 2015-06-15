@@ -13,37 +13,106 @@ var Glyde = {
 			
 		start: function() { "use strict";
 			Glyde.canvas = document.getElementById( "test" );
-			Glyde.canvas.addEventListener( "click", Glyde.click );
+			Glyde.canvas.addEventListener( "click", Glyde._clickHandler, false );
 
 			VecText.init();
 			ExtGlyde.init( Glyde.canvas );
-				
+			
 			Glue.attachPlugin( Glyde.glue, ExtGlyde );
-				
-			document.getElementById( "test_girls" ).addEventListener( "click", Glyde.testGirls );
+			
+			Glyde.showLauncher( false );    // true: only one then launch it straightaway, false: always show
+			// comment above and uncomment bwlow (and in html) to manually launch
+			//document.getElementById( "launch" ).addEventListener( "click", Glyde.showLauncher, false );
 		},
-		
-	  testGirls: function() {
-	    var app = Glyde.App.create( GlueFileManager.readText( "com_test_girls.app" ) );
-	    var script_file = Glyde.App.getScriptFile( app );
-	    var main_script = GlueFileManager.readText( script_file );
-	    var vars = Glyde.App.getVarsMap( app );   // already an object/map so no need to convert
-	    
-	    // TODO: includes need to be parsed and added to the start/end of the script
-				Glue.load( Glyde.glue, main_script, vars );
-				Glue.run( Glyde.glue );
-	    
+
+	  runApp: function( s_id ) {
+	    var app = Glyde.App.create( GlueFileManager.readText( s_id ) );
+	    if( app ) {
+  	    var script_file = Glyde.App.getScriptFile( app );
+  	    var main_script = GlueFileManager.readText( script_file );
+  	    if( main_script ) {
+  	      var vars = Glyde.App.getVarsMap( app );   // already an object/map so no need to convert
+  	    
+  	      // hide the launcher and make the runtime view visible
+  	      _.se( "launcherview", { "display": "none" } );
+  	      _.se( "runtimeview", { "display": "block" } );
+
+  	      //  TODO: includes need to be parsed and added to the start/end of the script
+  				Glue.load( Glyde.glue, main_script, vars );
+  				Glue.run( Glyde.glue );
+  	    } else {
+  	      // TODO: warn of unable to load script
+  	    }
+	    } else {
+	      // TODO: warn of unable to load app
+	    }
 	  },
 
-		click: function( e ) { "use strict";
-				e = (e || window.event);
-				
-				var label = Glyde._getIdAtEventPoint( e );
+  showLauncher: function( b_run_if_only_one ) {
+    var launcher = _.e( "launcherview" );
+    var files = GlueFileManager.listFiles( "" );    // "" is root path in this case, although all files are returned anyway...
+    if( files ) {
+      var apps = [], i, path;
+      for( i = 0; i < files.length; i++ ) {
+        path = files[i];
+        if( path.substr( (path.length - 4) ) == ".app" ) {
+          apps.push( path );
+        }
+      }
+      if( (apps.length == 1) && b_run_if_only_one ) {
+        // we only have the one file, we'll just run it and forget the launcher
+        Glyde.runApp( apps[0] );
+        return;
+      }
+      if( apps.length > 0 ) {
+        for( i = 0; i < apps.length; i++ ) {
+          path = apps[i];
+          var app = Glyde.App.create( GlueFileManager.readText( path ) );
+          var el = _.c( "div",
+              { "border": "1px solid black",
+                  "margin-bottom": "2px",
+                  "cursor": "pointer"
+                },
+              { "glyde.appfile": path }
+            );
+          var icon = _.c( "img", { "width": "64px", "height": "64px", "vertical-align": "middle" } );
+          var icon_src = GlueFileManager.readBinary( Glyde.App.getIconFile( app ) );
+          if( icon_src ) {
+            icon.src = icon_src;
+          } else {
+            icon.src = "assets/glyde128.png";
+          }
+          el.appendChild( icon );
+          el.appendChild( document.createTextNode( Glyde.App.getTitle( app ) ) );
+          el.addEventListener( "click", Glyde._launchFromClick, false );
+          launcher.appendChild( el );
+        }
+      } else {
+        launcher.appendChild( document.createTextNode( "No Apps" ) );
+      }
+    } else {
+      // TODO: warn unable to list files
+    }
+  },
+  
+  /** Event handling **/
+	_clickHandler: function( e ) { "use strict";
+			e = (e || window.event);
+			
+			var label = Glyde._getIdAtEventPoint( e );
 
-        if( label ) {
-          Glue.run( Glyde.glue, label );
-        }				
-			},
+      if( label ) {
+        Glue.run( Glyde.glue, label );
+      }				
+		},
+	
+  _launchFromClick: function( o_evt ) {
+    // as this is an event handler "this" will point to the element calling it
+    if( this["glyde.appfile"] ) {
+      var file = this["glyde.appfile"];
+      Glyde.runApp( file );
+    }
+  },
 			
 	/** File support **/
 	storeTextFile: function( s_path, a_data ) {
@@ -58,13 +127,6 @@ var Glyde = {
 	  return Glyde._pushFile( s_path, s_datasrc, true );
 	},
 
-  loadApp: function( s_id ) {
-    var src = GlueFileManager.readText( s_id );
-    if( src !== null ) {
-      console.log( src );
-    }
-  },
-  
   _pushFile: function( s_path, x_data, b_binary ) {
 	  // TODO: this needs to track added files so it can launch once all are available?
     return GlueFileManager.setResource( s_path, x_data, b_binary );
@@ -109,6 +171,10 @@ var Glyde = {
     
     getScriptFile: function( d_app ) {
       return Dict.valueOf( d_app, "script" );
+    },
+  
+    getIconFile: function( d_app ) {
+      return Dict.valueOf( d_app, "icon" );
     },
     
     getIncludeFiles: function( d_app ) {      // comma separated list? or multiple include keys makes an array/indexed dict?

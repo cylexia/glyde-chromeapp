@@ -1,4 +1,4 @@
-GlueFileManager.setResource( "com.test.girls/main.script", [
+Glyde.storeTextFile( "com.test.girls/main.script", [
     'f.setViewWidth 300 height 300',
     'f.setTitle "Picture Test"',
     '',
@@ -36,5 +36,5 @@ GlueFileManager.setResource( "com.test.girls/main.script", [
     '',
     ':NOTHING',
 	  ' stop'
-  ].join( "\n" )
+  ]
 );

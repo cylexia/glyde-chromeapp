@@ -3,6 +3,7 @@
 var Glyde = {
 		canvas: null,
 		glue: {},
+		run_standalone: false,    // true: if only one app exists it's run instead of the launcher being shown
 		
 		init: function() { "use strict";
 			Glue.init( Glyde.glue );
@@ -19,10 +20,20 @@ var Glyde = {
 			ExtGlyde.init( Glyde.canvas );
 			
 			Glue.attachPlugin( Glyde.glue, ExtGlyde );
-			
-			Glyde.showLauncher( false );    // true: only one then launch it straightaway, false: always show
-			// comment above and uncomment bwlow (and in html) to manually launch
-			//document.getElementById( "launch" ).addEventListener( "click", Glyde.showLauncher, false );
+
+      // to delay launch uncomment the below line (and the 5 at end)
+      //var df = function() {
+			if( FS ) {
+			  FS.init( "/fs/" );
+			  FS.loadFileSystem( "/fs/files.lst", Glyde.showLauncher );
+			} else {
+			  Glyde.showLauncher();
+			}
+      //};
+			//var b = _.c( "button" );
+			//b.addEventListener( "click", df, false );
+			//b.appendChild( document.createTextNode( "manual launch" ) );
+			//_.e( "launcherview" ).appendChild( b );
 		},
 
 	  runApp: function( s_id ) {
@@ -48,7 +59,7 @@ var Glyde = {
 	    }
 	  },
 
-  showLauncher: function( b_run_if_only_one ) {
+  showLauncher: function() {
     var launcher = _.e( "launcherview" );
     var files = GlueFileManager.listFiles( "" );    // "" is root path in this case, although all files are returned anyway...
     if( files ) {
@@ -59,7 +70,7 @@ var Glyde = {
           apps.push( path );
         }
       }
-      if( (apps.length == 1) && b_run_if_only_one ) {
+      if( (apps.length == 1) && Glyde.run_standalone ) {
         // we only have the one file, we'll just run it and forget the launcher
         Glyde.runApp( apps[0] );
         return;
@@ -149,7 +160,7 @@ var Glyde = {
 			  var line = s_src.substr( s, (e - s) ).trim();
 			  s = (e + 1);
 				e = line.indexOf( "=" );
-				if( e > -1 ) {
+				if( (e > -1) && (line.length > 0) && (line.charAt( 0 ) != "#") ) {
 					key = line.substring( 0, e );
 					value = line.substring( (e + 1) );
 					if( key == "var" ) {

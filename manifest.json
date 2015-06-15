@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Glyde",
+  "short_name": "Glyde",
+  "description": "",
+  "version": "0.0.1",
+  "minimum_chrome_version": "38",
+
+  "icons": {
+    "16": "assets/glyde16.png",
+    "128": "assets/glyde128.png"
+  },
+
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  }
+}

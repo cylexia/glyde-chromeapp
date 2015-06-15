@@ -21,7 +21,6 @@ var FS = {
   _makeRequest: function( s_file, f_callback, x_data ) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = f_callback;
-    console.log( chrome.runtime.getURL( s_file ) );
     xhr.open( "GET", chrome.runtime.getURL( s_file ), true );
     xhr["x-data"] = x_data;
     xhr.send();
@@ -30,11 +29,12 @@ var FS = {
   _loadFileSystemCallback: function() {
     // "this" points to the request since that sent the event
     if( this.readyState == 4 ) {    // OK
-      FS._loadFileList( this.responseText );
-      FS._getNextFile();
-    } else {
-      // TOOD: only show error for errors!
-      //console.log( "well that didn't work" );
+      if( this.status == 200 ) {
+        FS._loadFileList( this.responseText );
+        FS._getNextFile();
+      } else {
+        FS._loadFileFailed( this["x-data"] );
+      }
     }
   },
   
@@ -89,9 +89,11 @@ var FS = {
       var def = this["x-data"];
       Glyde.storeRawTextFile( def["name"], this.responseText );
       FS._getNextFile();
-    } else {
-      // TOOD: only show error for errors!
-      //console.log( "well that didn't work" );
     }
+  },
+    
+  _loadFileFailed: function( m_data ) {
+    console.log( "failed to load file: " + m_data["file"] );
   }
+  
 };

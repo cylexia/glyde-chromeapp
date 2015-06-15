@@ -23,18 +23,18 @@ f.loadResource "com.cylexia.g.lightswitch/res.map" as "res"
 :SWITCH
 	f.drawAs "wait" id "res.wait" x 175 y 175
 	C = f.getLastActionId
-#	A = join URL & "?c=" && C &&& " -o com.cylexia.g.lightswitch/log.txt"
-#	platform.exec "wget" withArgs A onDoneGoto :START onErrorGoto :ERROR
-	A = join URL & "?c=" && C
-	platform.exec "browse" withArgs A onDoneGoto :START onErrorGoto :ERROR
+	A = join URL & "?c=" && C &&& " -o com.cylexia.g.lightswitch/log.txt"
+	platform.exec "wget" withArgs A onDoneGoto :START onErrorGoto :ERROR
+#	A = join URL & "?c=" && C
+#	platform.exec "browse" withArgs A onDoneGoto :START onErrorGoto :ERROR
 	stop
 
 :ALL_OFF
 	f.drawAs "wait" id "res.wait" x 175 y 175
-#	A = join URL & "?a=off -o com.cylexia.g.lightswitch/log.txt"
-#	platform.exec "wget" withArgs A onDoneGoto :START onErrorGoto :ERROR
-	A = join URL & "?a=off"
-	platform.exec "browse" withArgs A onDoneGoto :START onErrorGoto :ERROR
+	A = join URL & "?a=off -o com.cylexia.g.lightswitch/log.txt"
+	platform.exec "wget" withArgs A onDoneGoto :START onErrorGoto :ERROR
+#	A = join URL & "?a=off"
+#	platform.exec "browse" withArgs A onDoneGoto :START onErrorGoto :ERROR
 	stop
 
 :ERROR

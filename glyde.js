@@ -75,13 +75,14 @@ var Glyde = {
                 },
               { "glyde.appfile": path }
             );
-          var icon = _.c( "img", { "width": "64px", "height": "64px", "vertical-align": "middle" } );
+          var icon;
           var icon_src = GlueFileManager.readBinary( Glyde.App.getIconFile( app ) );
           if( icon_src ) {
-            icon.src = icon_src;
+            icon = icon_src;
           } else {
-            icon.src = "assets/glyde128.png";
+            icon = _.c( "img", {}, { "src": "assets/glyde128.png" } );
           }
+          _.s( icon, { "width": "64px", "height": "64px", "vertical-align": "middle", "margin-right": "10px" } );
           el.appendChild( icon );
           el.appendChild( document.createTextNode( Glyde.App.getTitle( app ) ) );
           el.addEventListener( "click", Glyde._launchFromClick, false );

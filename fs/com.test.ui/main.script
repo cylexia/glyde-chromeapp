@@ -1,0 +1,17 @@
+# test for ui
+
+f.setTitle "Test App"
+f.writeAs "test" atX 10 atY 10 value "Ask" onClickGoto :ASK
+
+:ASK
+  platform.exec "ui" withArgs "ask -prompt \qYour Name\q -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
+  stop
+
+:READ
+  T = platform.readFromFile "test.txt"
+  echo T
+  stop
+  
+:FAIL
+  f.writeAs "error" atX 0 atY 0 colour "#f00" value "Failed"
+  stop

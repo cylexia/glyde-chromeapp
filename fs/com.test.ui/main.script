@@ -2,6 +2,7 @@
 
 f.setTitle "Test App"
 f.writeAs "test" atX 10 atY 10 value "Ask" onClickGoto :ASK
+stop
 
 :ASK
   platform.exec "ui" withArgs "ask -prompt \qYour Name\q -to test.txt" onDoneGoto :READ onErrorGoto :FAIL

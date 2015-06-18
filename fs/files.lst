@@ -21,3 +21,8 @@ image=icon.png;
 image=map.png;
 text=main.script;
 text=res.map;
+
+#   ui test harness                                                         ;
+path=;
+text=com_test_ui.app;
+text=com.test.ui/main.script;

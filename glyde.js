@@ -46,7 +46,7 @@ var Glyde = {
   	    
   	      // hide the launcher and make the runtime view visible
   	      _.se( "launcherview", { "display": "none" } );
-  	      _.se( "runtimeview", { "display": "block" } );
+  	      _.s( Glyde.getRuntimeDiv(), { "display": "block" } );
 
   	      //  TODO: includes need to be parsed and added to the start/end of the script
   				Glue.load( Glyde.glue, main_script, vars );
@@ -105,6 +105,10 @@ var Glyde = {
     } else {
       // TODO: warn unable to list files
     }
+  },
+  
+  getRuntimeDiv: function() {
+    return _.e( "runtimeview" );
   },
   
   /** Event handling **/

@@ -37,6 +37,11 @@ var Glyde = {
 		},
 
 	  runApp: function( s_id ) {
+      // reset the title of the runtime toolbar
+			var tb_title = _.e( "tb_title" );
+		  tb_title.removeChild( tb_title.childNodes[0] );
+		  _.at( tb_title, "Glyde" );
+
 	    var app = Glyde.App.create( GlueFileManager.readText( s_id ) );
 	    if( app ) {
   	    var script_file = Glyde.App.getScriptFile( app );
@@ -46,9 +51,11 @@ var Glyde = {
   	    
   	      // hide the launcher and make the runtime view visible
   	      _.se( "launcherview", { "display": "none" } );
-  	      _.se( "runtimeview", { "display": "block" } );
+  	      _.s( Glyde.getRuntimeDiv(), { "display": "block" } );
 
-  	      //  TODO: includes need to be parsed and added to the start/end of the script
+          ExtGlyde.reset();
+
+  	      //  TODO: "includes" need to be parsed and added to the start/end of the script
   				Glue.load( Glyde.glue, main_script, vars );
   				Glue.run( Glyde.glue );
   	    } else {
@@ -99,12 +106,25 @@ var Glyde = {
           el.addEventListener( "click", Glyde._launchFromClick, false );
           launcher.appendChild( el );
         }
+        // enable the back button and attach the handler
+        var back = _.e( "tb_back" );
+        _.s( back, { "display": "inline" } );
+        back.addEventListener( "click", Glyde.reshowLauncher );
       } else {
         launcher.appendChild( document.createTextNode( "No Apps" ) );
       }
     } else {
       // TODO: warn unable to list files
     }
+  },
+  
+  reshowLauncher: function() {
+    _.se( "launcherview", { "display": "block" } );
+    _.se( "runtimeview", { "display": "none" } );
+  },
+  
+  getRuntimeDiv: function() {
+    return _.e( "runtimeview" );
   },
   
   /** Event handling **/

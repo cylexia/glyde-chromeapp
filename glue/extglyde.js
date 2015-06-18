@@ -33,6 +33,18 @@ var ExtGlyde = {
     return false;
   },
 
+  reset: function() {
+    ExtGlyde.clearUI();
+  	ExtGlyde.resources = null;
+	  ExtGlyde.styles = null;
+	  ExtGlyde.last_action_id = "";
+	  ExtGlyde.window_title = "";
+	  ExtGlyde.window_width = -1;
+	  ExtGlyde.window_height = -1;
+    ExtGlyde.background_colour = "#fff";
+  },
+  
+
   setSize: function( w, h ) {
     ExtGlyde.window_width = w;
     ExtGlyde.window_height = h;

@@ -53,6 +53,7 @@ var Glyde = {
   	      _.se( "launcherview", { "display": "none" } );
   	      _.s( Glyde.getRuntimeDiv(), { "display": "block" } );
 
+          ExtGlyde.reset();
 
   	      //  TODO: "includes" need to be parsed and added to the start/end of the script
   				Glue.load( Glyde.glue, main_script, vars );

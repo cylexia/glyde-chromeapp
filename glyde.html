@@ -1,4 +1,6 @@
 <html><head>
+  <link rel="stylesheet" href="styles.css" />
+  
   <script src="lib/libcore.js"></script>
   <script src="lib/libglue.js"></script>
   <script src="lib/libvectext.js"></script>
@@ -19,8 +21,16 @@
     <script src="fs/com.test.girls/main.script.js"></script>
   <!-- end of filesystem -->
 </head><body>
-  <div id="launcherview"></div>
+  <div id="launcherview">
+    <div class="toolbar">
+      <span class="tbtitle">Glyde Launcher</span>
+    </div>
+  </div>
   <div id="runtimeview">
+    <div class="toolbar">
+      <span class="tbbackbtn" id="tb_back">&#x276e;</span>
+      <span class="tbtitle" id="tb_title">Glyde</span>
+    </div>
 	  <canvas id="test" width="640" height="480"></canvas>
 	</div>
 	<div id="glyde_assets" style="display:none">

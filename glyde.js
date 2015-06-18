@@ -99,12 +99,21 @@ var Glyde = {
           el.addEventListener( "click", Glyde._launchFromClick, false );
           launcher.appendChild( el );
         }
+        // enable the back button and attach the handler
+        var back = _.e( "tb_back" );
+        _.s( back, { "display": "inline" } );
+        back.addEventListener( "click", Glyde.reshowLauncher );
       } else {
         launcher.appendChild( document.createTextNode( "No Apps" ) );
       }
     } else {
       // TODO: warn unable to list files
     }
+  },
+  
+  reshowLauncher: function() {
+    _.se( "launcherview", { "display": "block" } );
+    _.se( "runtimeview", { "display": "none" } );
   },
   
   getRuntimeDiv: function() {

@@ -25,8 +25,14 @@ var UiExe = {
   glueExec: function( o_glue, s_args, s_done_label, s_error_label ) {
     UiExe._glue_instance = o_glue;
     var args = UiExe._parseCommandLine( s_args );
-    
-    UiExe._ask( args, s_done_label, s_error_label );
+    switch( args["_"] ) {
+      case "ask":
+        UiExe._ask( args, s_done_label, s_error_label );
+        break;
+      case "choose":
+        UiExe._choose( args, s_done_label, s_error_label );
+        break;
+    }
     
     //Glue.run( o_glue, s_done_label );
     return true;
@@ -51,6 +57,41 @@ var UiExe = {
     frame["uiexe.data"] = d_data;
     document.getElementsByTagName( "body" )[0].appendChild( frame );
     field.focus();
+  },
+  
+  _choose: function( d_data, s_done_label, s_error_label ) {
+    var value = (d_data["value"] ? d_data["value"] : "");
+    var field = _.c( 'select', 
+        { "width": "95%" }, 
+        { "size": "8" } 
+      );
+    var items = (d_data["items"] + "/"), s = 0, e, idx = 0;
+    while( (e = items.indexOf( "/", s )) > -1 ) {
+      var item = items.substr( s, (e - s) );
+      s = (e + 1);
+      var opt = _.c( "option" );
+      opt.text = item;
+      opt.value = idx;
+      if( idx == d_data["value"] ) {
+        opt.selected = true;
+      }
+      field.add( opt );
+      idx++;
+    }
+    var frame = UiExe._createDialogFrame( 
+        Dict.valueOf( d_data, "prompt" ), 
+        field,
+        UiExe._handleChooseOK,
+        UiExe._handleChooseCancel
+      );
+    field.addEventListener( "keypress", UiExe._fieldKeyHandler );
+    frame["uiexe.field"] = field;
+    frame["uiexe.label.done"] = s_done_label;
+    frame["uiexe.label.error"] = s_error_label;
+    frame["uiexe.data"] = d_data;
+    document.getElementsByTagName( "body" )[0].appendChild( frame );
+    field.focus();
+    
   },
   
   _createDialogFrame: function( s_text, o_innerdiv, f_on_ok, f_on_cancel ) {
@@ -135,19 +176,30 @@ var UiExe = {
   
   _handleAskOK: function() {
       var frame = this["uiexe.frame"];
-      var text = frame["uiexe.field"].value;
-      var label = frame["uiexe.label.done"];
       frame.parentNode.removeChild( frame );
-      UiExe._saveResult( frame["uiexe.data"], true, text );
-      Glue.run( UiExe._glue_instance, label );
+      UiExe._saveResult( frame["uiexe.data"], true, frame["uiexe.field"].value );
+      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
   },
   
   _handleAskCancel: function() {
       var frame = this["uiexe.frame"];
-      var label = frame["uiexe.label.done"];
       frame.parentNode.removeChild( frame );
       UiExe._saveResult( frame["uiexe.data"], false, "" );
-      Glue.run( UiExe._glue_instance, label );
+      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
+  },
+  
+  _handleChooseOK: function() {
+      var frame = this["uiexe.frame"];
+      frame.parentNode.removeChild( frame );
+      UiExe._saveResult( frame["uiexe.data"], true, frame["uiexe.field"].value );
+      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
+  },
+  
+  _handleChooseCancel: function() {
+      var frame = this["uiexe.frame"];
+      frame.parentNode.removeChild( frame );
+      UiExe._saveResult( frame["uiexe.data"], false, "" );
+      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
   },
   
   _saveResult: function( d_data, b_state, s_value ) {

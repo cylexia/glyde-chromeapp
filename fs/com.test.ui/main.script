@@ -1,11 +1,16 @@
 # test for ui
 
 f.setTitle "Test App"
-f.writeAs "test" atX 10 atY 10 value "Ask" onClickGoto :ASK
+f.writeAs "choose" atX 10 atY 10 value "Choose" onClickGoto :CHOOSE
+f.writeAs "ask" atX 10 atY 40 value "Ask" onClickGoto :ASK
 stop
 
 :ASK
-  platform.exec "ui" withArgs "ask -prompt \qYour Name\q -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
+  platform.exec "ui" withArgs "ask -prompt \qYour Name\q -value Chris -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
+  stop
+
+:CHOOSE
+  platform.exec "ui" withArgs "choose -prompt \qYour Name\q -items \qhello/world/from/me\q -value 2 -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
   stop
 
 :READ

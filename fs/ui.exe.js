@@ -8,6 +8,20 @@
 var UiExe = {
   _glue_instance: null,
   
+  /**
+   * ui MODE [options]
+   * MODE is "ask", "choose" or "info"
+   * options contains
+   *    -prompt     The prompt to show
+   *    -to         Target file to write to, use "." or skip for STDOUT
+   *    -format     Output format:
+   *                  txt|text- the string or "" if cancelled (or empty if nothing entered)
+   *                  mtext|"" - marked text, "+" (OK) or "-" (Cancel) followed by the value
+   *                  json - json object with the keys "status" (1|0) and "value"
+   *                  jsonp - same as json but wrapped in the function specified in -func
+   *    -value      The current value (a string for "ask", or index for "choose")
+   *    -items      / separated list of items to use with choose
+   */
   glueExec: function( o_glue, s_args, s_done_label, s_error_label ) {
     UiExe._glue_instance = o_glue;
     var args = UiExe._parseCommandLine( s_args );
@@ -29,6 +43,7 @@ var UiExe = {
     frame["uiexe.field"] = t;
     frame["uiexe.label.done"] = s_done_label;
     frame["uiexe.label.error"] = s_error_label;
+    frame["uiexe.data"] = d_data;
     document.getElementsByTagName( "body" )[0].appendChild( frame );
     t.focus();
   },
@@ -90,7 +105,7 @@ var UiExe = {
       var text = frame["uiexe.field"].value;
       var label = frame["uiexe.label.done"];
       frame.parentNode.removeChild( frame );
-      console.log( text );
+      UiExe._saveResult( frame["uiexe.data"], true, text );
       Glue.run( UiExe._glue_instance, label );
   },
   
@@ -98,8 +113,34 @@ var UiExe = {
       var frame = this["uiexe.frame"];
       var label = frame["uiexe.label.done"];
       frame.parentNode.removeChild( frame );
-      console.log( "cancelled: ''" );
+      UiExe._saveResult( frame["uiexe.data"], false, "" );
       Glue.run( UiExe._glue_instance, label );
+  },
+  
+  _saveResult: function( d_data, b_state, s_value ) {
+    var res, fmt = d_data["format"];
+    switch( fmt ) {
+      case "json":
+      case "jsonp":
+        res = ('{ "value":' + (b_state ? "1" : "0") + ', value: "' +
+            UiExe._deQuote( s_value ) + '" }'
+          );
+        if( fmt == "jsonp" ) {
+          res = (d_data["func"] + "( " + res + " );");
+        }
+        break;
+      case "text":
+        res = (b_state ? s_value : "");
+        break;
+      default:
+        res = ((b_state ? "+" : "-") + s_value);
+        break;
+    }
+    if( d_data["to"] ) {
+      GlueFileManager.writeText( d_data["to"], res );
+    } else {
+      console.log( res );
+    }
   },
   
   _parseCommandLine: function( s_cmdline, d_defaults ) {

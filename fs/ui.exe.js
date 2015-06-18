@@ -33,19 +33,24 @@ var UiExe = {
   },
   
   _ask: function( d_data, s_done_label, s_error_label ) {
-    var t = _.c( 'input', { "width": "95%" }, { "type": "text", "size": "40" } );
+    var value = (d_data["value"] ? d_data["value"] : "");
+    var field = _.c( 'input', 
+        { "width": "95%" }, 
+        { "type": "text", "size": "40", "text": value } 
+      );
     var frame = UiExe._createDialogFrame( 
         Dict.valueOf( d_data, "prompt" ), 
-        t,
+        field,
         UiExe._handleAskOK,
         UiExe._handleAskCancel
       );
-    frame["uiexe.field"] = t;
+    field.addEventListener( "keypress", UiExe._fieldKeyHandler );
+    frame["uiexe.field"] = field;
     frame["uiexe.label.done"] = s_done_label;
     frame["uiexe.label.error"] = s_error_label;
     frame["uiexe.data"] = d_data;
     document.getElementsByTagName( "body" )[0].appendChild( frame );
-    t.focus();
+    field.focus();
   },
   
   _createDialogFrame: function( s_text, o_innerdiv, f_on_ok, f_on_cancel ) {
@@ -56,14 +61,21 @@ var UiExe = {
         "text-align": "center"
       } );
     wrap.appendChild( o_innerdiv );
-    var btns = _.c( 'div', { "padding": "5px" } );
-    var ok = _.c( 'button', { "margin": "2px" } );
+    var btnstyle = { 
+          "margin": "2px", "padding": "5px", "background": "#ddd",
+          "font-weight": "bold", "border": "1px solid #000", "cursor": "pointer"
+      };
+    var btns = _.c( 'div', { "padding": "15px" } );
+    var ok = _.c( 'button', btnstyle );
     _.at( ok, "OK" );
+    ok.style["border"] = "2px solid #000";
     ok.addEventListener( "click", f_on_ok );
+    ok["uiexe.type"] = 1;
     btns.appendChild( ok );
-    var cancel = _.c( 'button', { "margin": "2px" } );
+    var cancel = _.c( 'button', btnstyle );
     _.at( cancel, "Cancel" );
     cancel.addEventListener( "click", f_on_cancel );
+    cancel["uiexe.type"] = 2;
     btns.appendChild( cancel );
     var back = _.c( 'div', { 
         "border": "2px solid #555",
@@ -98,6 +110,27 @@ var UiExe = {
     ok["uiexe.frame"] = frame;
     cancel["uiexe.frame"] = frame;
     return frame;
+  },
+  
+  // Handle enter/esc
+  _fieldKeyHandler: function( e ) {
+    e = (e || event);
+    var type;
+    if( e.keyCode == 13 ) {
+      type = 1;
+    } else if( e.keyCode == 27 ) {    // doesn't get sent apparently...
+      type = 2;
+    } else {
+      return;
+    }
+    var btns = document.getElementsByTagName( "button" );
+    for( var i = 0; i < btns.length; i++ ) {
+      if( btns[i]["uiexe.type"] && (btns[i]["uiexe.type"] == type) ) {
+        btns[i].click();
+        e.preventDefault();
+        return;
+      }
+    }
   },
   
   _handleAskOK: function() {

@@ -32,7 +32,7 @@ var ExtGlyde = {
     }
     return false;
   },
-  
+
   setSize: function( w, h ) {
     ExtGlyde.window_width = w;
     ExtGlyde.window_height = h;
@@ -116,7 +116,11 @@ var ExtGlyde = {
 			if( (cmd == "setwidth") || (cmd == "setviewwidth") ) {
 				return ExtGlyde.setupView( w );
 			} else if( cmd == "settitle" ) {
-				ExtGlyde.window_title = wc;
+				var tb_title = _.e( "tb_title" );
+				if( tb_title ) {
+				  tb_title.removeChild( tb_title.childNodes[0] );
+				  _.at( tb_title, wc );
+				}
 				return 1;
 
 			} else if( cmd == "doaction" ) {
@@ -449,12 +453,13 @@ var ExtGlyde = {
 		if( ExtGlyde.resources === null ) {
 			ExtGlyde.resources = Dict.create();
 		}
-		if( !Dict.containsKey( ExtGlyde.resources, s_id ) ) {
-			var data = GlueFileManager.readText( s_src );
-			Dict.set( ExtGlyde.resources, s_id, ExtGlyde.ImageMap.create( data ) );
-			return true;
+		if( Dict.containsKey( ExtGlyde.resources, s_id ) ) {
+		  // deallocate
 		}
-		return false;
+		// resources can be replaced using the same ids
+		var data = GlueFileManager.readText( s_src );
+		Dict.set( ExtGlyde.resources, s_id, ExtGlyde.ImageMap.create( data ) );
+		return true;
 	},
   
 	_drawRect: function( o_context, d_def, b_filled ) {

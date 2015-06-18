@@ -37,6 +37,11 @@ var Glyde = {
 		},
 
 	  runApp: function( s_id ) {
+      // reset the title of the runtime toolbar
+			var tb_title = _.e( "tb_title" );
+		  tb_title.removeChild( tb_title.childNodes[0] );
+		  _.at( tb_title, "Glyde" );
+
 	    var app = Glyde.App.create( GlueFileManager.readText( s_id ) );
 	    if( app ) {
   	    var script_file = Glyde.App.getScriptFile( app );
@@ -48,7 +53,8 @@ var Glyde = {
   	      _.se( "launcherview", { "display": "none" } );
   	      _.s( Glyde.getRuntimeDiv(), { "display": "block" } );
 
-  	      //  TODO: includes need to be parsed and added to the start/end of the script
+
+  	      //  TODO: "includes" need to be parsed and added to the start/end of the script
   				Glue.load( Glyde.glue, main_script, vars );
   				Glue.run( Glyde.glue );
   	    } else {

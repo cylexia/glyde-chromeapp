@@ -1,8 +1,9 @@
 # test for ui
 
 f.setTitle "Test App"
-f.writeAs "choose" atX 10 atY 10 value "Choose" onClickGoto :CHOOSE
-f.writeAs "ask" atX 10 atY 40 value "Ask" onClickGoto :ASK
+f.writeAs "info" atX 10 atY 10 value "Info" onClickGoto :INFO
+f.writeAs "choose" atX 10 atY 40 value "Choose" onClickGoto :CHOOSE
+f.writeAs "ask" atX 10 atY 70 value "Ask" onClickGoto :ASK
 stop
 
 :ASK
@@ -10,7 +11,11 @@ stop
   stop
 
 :CHOOSE
-  platform.exec "ui" withArgs "choose -prompt \qYour Name\q -items \qhello/world/from/me\q -value 2 -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
+  platform.exec "ui" withArgs "choose -prompt \qChoose One\q -items \qhello/world/from/me\q -value 2 -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
+  stop
+
+:INFO
+  platform.exec "ui" withArgs "info -prompt \qAbout\q -value \qui.exe|| ||(c)Cylexia\q -to test.txt" onDoneGoto :READ onErrorGoto :FAIL
   stop
 
 :READ

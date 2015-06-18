@@ -13,7 +13,8 @@ var UiExe = {
    * MODE is "ask", "choose" or "info"
    * options contains
    *    -prompt     The prompt to show
-   *    -to         Target file to write to, use "." or skip for STDOUT
+   *    -to         Target file to write to, use "." for STDOUT or "" (or skip) to not
+   *                write anything (ie. for INFO)
    *    -format     Output format:
    *                  txt|text- the string or "" if cancelled (or empty if nothing entered)
    *                  mtext|"" - marked text, "+" (OK) or "-" (Cancel) followed by the value
@@ -31,6 +32,9 @@ var UiExe = {
         break;
       case "choose":
         UiExe._choose( args, s_done_label, s_error_label );
+        break;
+      case "info":
+        UiExe._info( args, s_done_label, s_error_label );
         break;
     }
     
@@ -93,9 +97,35 @@ var UiExe = {
     field.focus();
     
   },
+
+  _info: function( d_data, s_done_label, s_error_label ) {
+    var field = _.c( 'div' );
+    var lines = (d_data["value"] + "|"), s = 0, e;
+    while( (e = lines.indexOf( "|", s )) > -1 ) {
+      var line = lines.substr( s, (e - s) );
+      s = (e + 1);
+      if( !line ) {
+        line = "\u00A0";    // nbsp in unicode
+      }
+      field.appendChild( _.at( _.c( "div" ), line ) );
+    }
+    var frame = UiExe._createDialogFrame( 
+        Dict.valueOf( d_data, "prompt" ), 
+        field,
+        UiExe._handleInfoOK,
+        null
+      );
+    field.addEventListener( "keypress", UiExe._fieldKeyHandler );
+    frame["uiexe.field"] = field;
+    frame["uiexe.label.done"] = s_done_label;
+    frame["uiexe.label.error"] = s_error_label;
+    frame["uiexe.data"] = d_data;
+    document.getElementsByTagName( "body" )[0].appendChild( frame );
+    field.focus();
+  },
   
   _createDialogFrame: function( s_text, o_innerdiv, f_on_ok, f_on_cancel ) {
-    var text = _.c( 'div', { "padding": "5px" } );
+    var text = _.c( 'div', { "padding": "5px", "font-weight": "bold" } );
     _.at( text, s_text );
     var wrap = _.c( 'div', { 
         "overflow": "auto", 
@@ -107,17 +137,18 @@ var UiExe = {
           "font-weight": "bold", "border": "1px solid #000", "cursor": "pointer"
       };
     var btns = _.c( 'div', { "padding": "15px" } );
-    var ok = _.c( 'button', btnstyle );
-    _.at( ok, "OK" );
+    var ok, cancel;
+    ok = _.at( _.c( 'button', btnstyle ), "OK" );
     ok.style["border"] = "2px solid #000";
     ok.addEventListener( "click", f_on_ok );
     ok["uiexe.type"] = 1;
     btns.appendChild( ok );
-    var cancel = _.c( 'button', btnstyle );
-    _.at( cancel, "Cancel" );
-    cancel.addEventListener( "click", f_on_cancel );
-    cancel["uiexe.type"] = 2;
-    btns.appendChild( cancel );
+    if( f_on_cancel ) {
+      cancel = _.at( _.c( 'button', btnstyle ), "Cancel" );
+      cancel.addEventListener( "click", f_on_cancel );
+      cancel["uiexe.type"] = 2;
+      btns.appendChild( cancel );
+    }
     var back = _.c( 'div', { 
         "border": "2px solid #555",
         "margin": "1px",
@@ -149,7 +180,9 @@ var UiExe = {
     _.s( back, { "left": ((body.clientWidth - 600) / 2), "top": "0px" } );
     frame.appendChild( back );
     ok["uiexe.frame"] = frame;
-    cancel["uiexe.frame"] = frame;
+    if( f_on_cancel ) {
+      cancel["uiexe.frame"] = frame;
+    }
     return frame;
   },
   
@@ -202,6 +235,13 @@ var UiExe = {
       Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
   },
   
+  _handleInfoOK: function() {
+      var frame = this["uiexe.frame"];
+      frame.parentNode.removeChild( frame );
+      UiExe._saveResult( frame["uiexe.data"], true, 1 );
+      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
+  },
+  
   _saveResult: function( d_data, b_state, s_value ) {
     var res, fmt = d_data["format"];
     switch( fmt ) {
@@ -222,9 +262,11 @@ var UiExe = {
         break;
     }
     if( d_data["to"] ) {
-      GlueFileManager.writeText( d_data["to"], res );
-    } else {
-      console.log( res );
+      if( d_data["to"] == "." ) {   // STDOUT normally
+        console.log( res );
+      } else {
+        GlueFileManager.writeText( d_data["to"], res );
+      }
     }
   },
   
@@ -245,6 +287,8 @@ var UiExe = {
           if( in_q ) {
             if( c == '"' ) {
               in_q = false;
+            } else if( c == "|" ) {
+              word += s_cmdline.charAt( ++i );
             } else {
               word += c;
             }

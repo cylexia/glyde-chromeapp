@@ -1,13 +1,32 @@
 /* CSS file placeholder. */
 HTML, BODY { 
   margin: 0; 
-  padding: 0 
+  padding: 0;
+}
+
+BODY {
+  border: 2px solid #000;   /* due to no chrome in app */
 }
 
 DIV#titlebar {
   background: #aaf;
   padding: 2px;
   font-weight: bold;
+}
+
+DIV#windowwidgets {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 6px 5px 0 0;
+  z-index: 1000;
+}
+
+SPAN.windowwidget {
+  /* vendor specific due to no chrome in app, if not set no click event gets
+      fired) */
+  -webkit-app-region: no-drag; 
+  padding: 4px;
 }
 
 DIV#launcherview { 
@@ -26,14 +45,31 @@ DIV#runtimeview CANVAS {
 }
 
 .toolbar {
+  /* vendor specific for app due to no chrome: 
+      (use "no-drag" on buttons etc. inside titlebar) */
+  -webkit-app-region: drag; 
   background: #ccc;
   border-bottom: 2px solid #777;
   margin: 0 0 3px 0;
   padding: 5px;
   text-align: left;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.toolbar TD.left {
+  width: 80%;
+}
+
+.toolbar TD right {
+  width: 20%;
+  text-align: right;
 }
 
 .tbbackbtn {
+  /* vendor specific due to no chrome in app, if not set no click event gets
+      fired) */
+  -webkit-app-region: no-drag; 
   padding: 1px 20px 1px 1px;
 }
 

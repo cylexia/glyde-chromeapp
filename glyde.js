@@ -8,12 +8,16 @@ var Glyde = {
 		init: function() { "use strict";
 			Glue.init( Glyde.glue );
 			window.addEventListener( "load", Glyde.start );
-			
+
 			return true;
 		},
 			
 		start: function() { "use strict";
-			Glyde.canvas = document.getElementById( "test" );
+		  // since we're doing our own widgets we need to make them work
+	    _.e( "widget_minimise" ).addEventListener( "click", Glyde._minimiseWindow, false );
+      _.e( "widget_close" ).addEventListener( "click", Glyde._closeWindow, false );
+
+			Glyde.canvas = document.getElementById( "content" );
 			Glyde.canvas.addEventListener( "click", Glyde._clickHandler, false );
 
 			VecText.init();
@@ -171,6 +175,14 @@ var Glyde = {
 		return ExtGlyde.getLabelForButtonAt( x, y );
   },
   
+  _minimiseWindow: function() {
+    chrome.app.window.current().minimize();
+  },
+  
+  _closeWindow: function() {
+    chrome.app.window.current().close();
+  },
+
   App: {
     create: function( s_src ) {
 			var e, s = 0;

@@ -1,0 +1,22 @@
+# Glyde Startup Config                                                        ;
+
+# External applications;
+exe=browse.exe;
+exe=ui.exe;
+exe=wget.exe;
+
+# Available apps;
+#app=com_test_girls;
+app=com.cylexia.g.lightswitch
+app=com_test_ui;
+app=srh_dno;
+
+# light switch files;
+com.cylexia.g.lightswitch=path=com.cylexia.g.lightswitch/;
+com.cylexia.g.lightswitch=image=icon.png;
+com.cylexia.g.lightswitch=image=map.png;
+com.cylexia.g.lightswitch=text=main.script;
+com.cylexia.g.lightswitch=text=res.map;
+
+# Use launcher (no default specified);
+run=;

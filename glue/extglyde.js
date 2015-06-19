@@ -165,8 +165,8 @@ var ExtGlyde = {
 				}
 				Dict.set( ExtGlyde.keys, wc, Dict.valueOf( w, "goto" ) );
 
-			} else if( cmd == "ontimer" ) {
-			  ExtGlyde._startTimer( wc, Dict.intValueOf( w, "every" ), Dict.valueOf( w, "goto" ) );
+			} else if( cmd == "starttimer" ) {
+			  ExtGlyde._startTimer( glue, wc, Dict.intValueOf( w, "interval" ), Dict.valueOf( w, "ontickgoto" ) );
 			} else if( cmd == "stoptimer" ) {
 			  ExtGlyde._stopTimer( wc );
 			} else if( cmd == "stopalltimers" ) {
@@ -513,8 +513,8 @@ var ExtGlyde = {
 
   _timerFired: function() {
     if( ExtGlyde.timers ) {
-      for( var id in timers ) {
-        var t = timers[id];
+      for( var id in ExtGlyde.timers ) {
+        var t = ExtGlyde.timers[id];
         t["count"]--;
         if( t["count"] === 0 ) {
           t["count"] = t["reset"];

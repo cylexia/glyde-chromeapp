@@ -4,6 +4,12 @@ f.setTitle "Test App"
 f.writeAs "info" atX 10 atY 10 value "Info" onClickGoto :INFO
 f.writeAs "choose" atX 10 atY 40 value "Choose" onClickGoto :CHOOSE
 f.writeAs "ask" atX 10 atY 70 value "Ask" onClickGoto :ASK
+f.writeAs "stop_timers" atX 10 atY 120 value "Stop All Timers" onClickGoto :STOP_ALL
+
+# timer test
+N = @ 0
+f.startTimer "title_timer" interval 10 onTickGoto :TIMER_TEST
+
 stop
 
 :ASK
@@ -25,4 +31,19 @@ stop
   
 :FAIL
   f.writeAs "error" atX 0 atY 0 colour "#f00" value "Failed"
+  stop
+
+
+
+
+
+:TIMER_TEST
+  N = increase N by 1
+  DONE = testIf N = 10
+  (DONE) f.stopTimer "title_timer"
+  f.setTitle N
+  stop
+  
+:STOP_ALL
+  f.stopAllTimers
   stop

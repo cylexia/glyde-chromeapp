@@ -14,9 +14,13 @@ var Glyde = {
 			
 		start: function() { "use strict";
 		  // since we're doing our own widgets we need to make them work
-	    _.e( "widget_minimise" ).addEventListener( "click", Glyde._minimiseWindow, false );
-      _.e( "widget_close" ).addEventListener( "click", Glyde._closeWindow, false );
-
+		  var idx = 0, w;
+		  while( (w = _.e( ("widget_close" + idx) )) ) {
+        w.addEventListener( "click", Glyde._closeWindow, false );
+	      _.e( ("widget_minimise" + idx) ).addEventListener( "click", Glyde._minimiseWindow, false );
+        idx++;
+      }
+      
 			Glyde.canvas = document.getElementById( "content" );
 			Glyde.canvas.addEventListener( "click", Glyde._clickHandler, false );
 

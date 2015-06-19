@@ -12,6 +12,8 @@ var ExtGlyde = {
 	buttons: null,
 	keys: null,
 	button_sequence: [],
+	timers: null,
+	timer_manager: null,
 	action: "",
 	action_params: "",
 	resume_label: "",
@@ -27,6 +29,7 @@ var ExtGlyde = {
     "use strict";
     if( !ExtGlyde._inited ) {
       ExtGlyde.plane = canvas;
+      ExtGlyde.reset();
       ExtGlyde._inited = true;
       return true;
     }
@@ -37,6 +40,7 @@ var ExtGlyde = {
     ExtGlyde.clearUI();
   	ExtGlyde.resources = null;
 	  ExtGlyde.styles = null;
+	  ExtGlyde.timers = null;
 	  ExtGlyde.last_action_id = "";
 	  ExtGlyde.window_title = "";
 	  ExtGlyde.window_width = -1;
@@ -160,6 +164,13 @@ var ExtGlyde = {
 					ExtGlyde.keys = Dict.create();
 				}
 				Dict.set( ExtGlyde.keys, wc, Dict.valueOf( w, "goto" ) );
+
+			} else if( cmd == "starttimer" ) {
+			  ExtGlyde._startTimer( glue, wc, Dict.intValueOf( w, "interval" ), Dict.valueOf( w, "ontickgoto" ) );
+			} else if( cmd == "stoptimer" ) {
+			  ExtGlyde._stopTimer( wc );
+			} else if( cmd == "stopalltimers" ) {
+			  ExtGlyde._stopTimer( "" );
 
 			} else if( cmd == "drawas" ) {
 				ExtGlyde.drawAs( wc, w );
@@ -499,6 +510,53 @@ var ExtGlyde = {
 	    o_context.strokeRect( x, y, w, h );
 	  }
 	},
+
+  _timerFired: function() {
+    if( ExtGlyde.timers ) {
+      for( var id in ExtGlyde.timers ) {
+        var t = ExtGlyde.timers[id];
+        t["count"]--;
+        if( t["count"] === 0 ) {
+          t["count"] = t["reset"];
+          Glue.run( t["glue"], t["label"] );
+        }
+      }
+    }
+  },
+
+  _startTimer: function( o_glue, s_id, i_tenths, s_label ) {
+    if( !ExtGlyde.timers ) {
+      ExtGlyde.timer_manager = window.setInterval( ExtGlyde._timerFired, 100 );   // install our timer
+      ExtGlyde.timers = {};
+    }
+    var t = { 
+        "glue": o_glue,
+        "count": i_tenths,
+        "reset": i_tenths,
+        "label": s_label
+      };
+    ExtGlyde.timers[s_id] = t;
+  },
+  
+  _stopTimer: function( s_id ) {
+    if( !ExtGlyde.timers ) {
+      return;
+    }
+    if( s_id ) {
+      if( ExtGlyde.timers[s_id] ) {
+        delete ExtGlyde.timers[s_id];
+      }
+      if( ExtGlyde.timers.length > 0 ) {
+        return;
+      }
+    }
+    // out of timers or requested that we stop them all
+    if( ExtGlyde.timer_manager ) {
+      window.clearInterval( ExtGlyde.timer_manager );
+      ExtGlyde.timer_manager = null;
+    }
+    ExtGlyde.timers = null;
+  },
 
 	/**
 	 * Stores a button

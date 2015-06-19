@@ -9,7 +9,11 @@ chrome.app.runtime.onLaunched.addListener(function(launchData) {
     'glyde.html',
     {
       id: 'mainWindow',
-      bounds: {width: 800, height: 600}
+      bounds: {width: 800, height: 600},
+      resizable: false,
+      frame: {
+        type: "none"
+      }
     }
   );
 });

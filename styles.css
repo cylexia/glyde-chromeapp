@@ -1,7 +1,11 @@
 /* CSS file placeholder. */
 HTML, BODY { 
   margin: 0; 
-  padding: 0 
+  padding: 0;
+}
+
+BODY {
+  border: 2px solid #000;   /* due to no chrome in app */
 }
 
 DIV#titlebar {
@@ -26,14 +30,35 @@ DIV#runtimeview CANVAS {
 }
 
 .toolbar {
+  /* vendor specific for app due to no chrome: 
+      (use "no-drag" on buttons etc. inside titlebar) */
+  -webkit-app-region: drag; 
   background: #ccc;
   border-bottom: 2px solid #777;
   margin: 0 0 3px 0;
   padding: 5px;
   text-align: left;
+  position: relative;
+}
+
+.windowwidgets {
+  position: absolute; 
+  right: 0px;
+  top: 0px;
+  padding: 5px;
+}
+
+.windowwidget {
+  /* vendor specific due to no chrome in app, if not set no click event gets
+      fired) */
+  -webkit-app-region: no-drag; 
+  padding: 4px;
 }
 
 .tbbackbtn {
+  /* vendor specific due to no chrome in app, if not set no click event gets
+      fired) */
+  -webkit-app-region: no-drag; 
   padding: 1px 20px 1px 1px;
 }
 

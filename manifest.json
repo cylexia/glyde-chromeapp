@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Glyde",
   "short_name": "Glyde",
-  "description": "",
-  "version": "0.0.1",
+  "description": "Glyde Application Runtime",
+  "version": "0.1506.20",
   "minimum_chrome_version": "38",
 
   "icons": {
@@ -12,7 +12,7 @@
   },
 
   "app": {
-    "background": {
+    "background": { 
       "scripts": [ 
         "lib/libcore.js",
         "background.js" 

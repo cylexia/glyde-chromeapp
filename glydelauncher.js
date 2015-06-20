@@ -59,11 +59,14 @@ var GlydeLauncher = {
         path = (apps[i] + ".app");
         var app = Glyde.App.create( GlueFileManager.readText( path ) );
         var el = _.c( "div",
-            { "border": "1px solid black",
-                "margin-bottom": "2px",
-                "cursor": "pointer"
-              },
-            { "glyde.appfile": path }
+            { 
+              "margin-bottom": "2px",
+              "cursor": "pointer"
+            },
+            { 
+              "glyde.appfile": path,
+              "className": "launcher_button"
+            }
           );
         var icon;
         var icon_src = GlueFileManager.readBinary( Glyde.App.getIconFile( app ) );

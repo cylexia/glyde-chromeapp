@@ -29,7 +29,7 @@ var CylexiaApp = {
       var config = Utils.loadSimpleConfig( this.responseText );
       var run = Dict.valueOf( config, "run" );
       if( run ) {
-        CylexiaApp._startApp( app );
+        CylexiaApp._startApp( run );
       } else {
         CylexiaApp._startLauncher();
       }
@@ -39,13 +39,13 @@ var CylexiaApp = {
   _startApp: function( s_name ) {
     // load app files here instead of all at once? (need to figure something as no launcher)
     chrome.app.window.create(
-      'glyde.html',
+      ('glydert.html#' + s_name + ".app"),
       {
-        id: 'launcherWindow',
+        id: s_name,
         bounds: {width: 800, height: 600},
         resizable: false,
         frame: {
-          type: "none"
+          //type: "none"
         }
       } 
     );
@@ -53,7 +53,7 @@ var CylexiaApp = {
   
   _startLauncher: function() {
     chrome.app.window.create(
-      'launcher.html',
+      'glydelauncher.html',
       {
         id: 'launcherWindow',
         bounds: {width: 600, height: 600},

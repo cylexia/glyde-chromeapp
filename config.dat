@@ -31,5 +31,6 @@ com_test_ui=path=;
 com_test_ui=text=com_test_ui.app;
 com_test_ui=text=com.test.ui/main.script;
 
-# Use launcher (no default specified);
+# Empty: use launcher                                                       ;
+# App name (no ".app"): run that app only                                   ;
 run=;

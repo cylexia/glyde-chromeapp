@@ -317,3 +317,7 @@ var UiExe = {
     
     
 GluePlatform.setExecApp( "ui", UiExe );
+if( FS ) {
+  FS.notifyLoaded( "ui.exe.js" );
+}
+

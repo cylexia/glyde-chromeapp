@@ -12,5 +12,7 @@ var BrowseExe = {
   }
 };
     
-    
 GluePlatform.setExecApp( "browse", BrowseExe );
+if( FS ) {
+  FS.notifyLoaded( "browse.exe.js" );
+}

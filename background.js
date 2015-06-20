@@ -53,7 +53,7 @@ var CylexiaApp = {
   
   _startLauncher: function() {
     chrome.app.window.create(
-      'glyde.html',
+      'launcher.html',
       {
         id: 'launcherWindow',
         bounds: {width: 600, height: 600},
@@ -64,6 +64,7 @@ var CylexiaApp = {
 };
 
 // Attach the startup
-CylexiaApp.init();
-chrome.app.runtime.onLaunched.addListener( CylexiaApp.start );
+if( CylexiaApp.init() ) {
+  chrome.app.runtime.onLaunched.addListener( CylexiaApp.start );
+}
 

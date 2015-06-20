@@ -7,7 +7,7 @@ exe=wget.exe;
 
 # Available apps;
 #app=com_test_girls;
-app=com.cylexia.g.lightswitch
+app=com.cylexia.g.lightswitch;
 app=com_test_ui;
 app=srh_dno;
 

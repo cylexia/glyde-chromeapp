@@ -15,7 +15,6 @@
     "background": {
       "scripts": [ 
         "lib/libcore.js",
-        "app.js", 
         "background.js" 
       ]
     }

@@ -23,7 +23,6 @@ DIV#runtimeview {
   height: 100%; 
   text-align: center; 
   overflow: auto;
-  display: none; 
 }
 DIV#runtimeview CANVAS { 
   margin: auto;

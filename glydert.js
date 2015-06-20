@@ -1,5 +1,9 @@
 // "use strict";
 
+function _log( s_text ) {
+  _.e( "log" ).value += (s_text + "\n");
+}
+
 var GlydeRT = {
 		canvas: null,
 		glue: {},
@@ -19,24 +23,56 @@ var GlydeRT = {
 	      _.e( ("widget_minimise" + idx) ).addEventListener( "click", GlydeRT._minimiseWindow, false );
         idx++;
       }
-      
+_log( "running: " + document.location.hash.substr( 1 ) );		  
+		  // we need the config, load it and pass on to next method
+		  // TODO: a "loading" box?
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = GlydeRT.startWithConfig;
+      xhr.open( "GET", chrome.runtime.getURL( "config.dat" ), true );
+      xhr.send();
+    },
+  
+  	startWithConfig: function() {
+      // "this" will be the request
+      if( this.readyState == 4 ) {    // OK
+        if( this.status == 200 ) {
+          var config = Utils.loadSimpleConfig( this.responseText );
+          var app = document.location.hash;
+          app = app.substr( 1, (app.length - 5) );
+          var download = [], i;
+          var scripts = Utils.split( Dict.valueOf( config, "script" ), "\n" );
+          for( i = 0; i < scripts.length; i++ ) {
+            download.push( ("script=" + scripts[i] + ";") );
+          }
+          download.push( ("text=" + app + ".app;") );
+          var files = Utils.split( Dict.valueOf( config, app ), "\n" );
+          for( i = 0; i < files.length; i++ ) {
+            download.push( (files[i] + ";") );
+          }
+          // load the file list and pass control to the next stage
+          FS.init( "/fs/" );
+          FS.loadFileSystemFromString( download.join( "\n" ), GlydeRT.startWithFileSystem );
+          
+        } else {
+          // TODO: show an error page
+        }
+      }
+  	},
+		
+    startWithFileSystem: function() {
 			GlydeRT.canvas = document.getElementById( "content" );
-			GlydeRT.canvas.addEventListener( "click", Glyde._clickHandler, false );
+			GlydeRT.canvas.addEventListener( "click", GlydeRT._clickHandler, false );
 
 			VecText.init();
 			ExtGlyde.init( GlydeRT.canvas );
 			
 			Glue.attachPlugin( GlydeRT.glue, ExtGlyde );
-
-			if( FS ) {
-			  FS.init( "/fs/" );
-			  FS.loadFileSystem( "/fs/files.lst", GlydeRT.showLauncher );
-			} else {
-			  Glyde.showLauncher();
-			}
+			
+			GlydeRT.runApp( document.location.hash.substr( 1 ) );
 		},
 
 	  runApp: function( s_id ) {
+_log( "runApp:" + s_id )	    ;
       // reset the title of the runtime toolbar
 			var tb_title = _.e( "tb_title" );
 		  tb_title.removeChild( tb_title.childNodes[0] );
@@ -49,15 +85,9 @@ var GlydeRT = {
   	    if( main_script ) {
   	      var vars = Glyde.App.getVarsMap( app );   // already an object/map so no need to convert
   	    
-  	      // hide the launcher and make the runtime view visible
-  	      _.se( "launcherview", { "display": "none" } );
-  	      _.s( Glyde.getRuntimeDiv(), { "display": "block" } );
-
-          ExtGlyde.reset();
-
   	      //  TODO: "includes" need to be parsed and added to the start/end of the script
-  				Glue.load( Glyde.glue, main_script, vars );
-  				Glue.run( Glyde.glue );
+  				Glue.load( GlydeRT.glue, main_script, vars );
+  				Glue.run( GlydeRT.glue );
   	    } else {
   	      // TODO: warn of unable to load script
   	    }
@@ -69,22 +99,22 @@ var GlydeRT = {
   getRuntimeDiv: function() {
     return _.e( "runtimeview" );
   },
-  
+
   /** Event handling **/
 	_clickHandler: function( e ) { "use strict";
-			e = (e || window.event);
-			
-			var label = Glyde._getIdAtEventPoint( e );
+		e = (e || window.event);
+		
+		var label = GlydeRT._getIdAtEventPoint( e );
 
-      if( label ) {
-        Glue.run( Glyde.glue, label );
-      }				
-		},
+    if( label ) {
+      Glue.run( GlydeRT.glue, label );
+    }				
+	},
 	
   _getIdAtEventPoint: function( o_evt ) { "use strict";
-		var rect = Glyde.canvas.getBoundingClientRect();
-		var x = Math.round( ((o_evt.clientX - rect.left) / (rect.right - rect.left) * Glyde.canvas.width) );
-		var y = Math.round( ((o_evt.clientY - rect.top) / (rect.bottom - rect.top ) * Glyde.canvas.height) );
+		var rect = GlydeRT.canvas.getBoundingClientRect();
+		var x = Math.round( ((o_evt.clientX - rect.left) / (rect.right - rect.left) * GlydeRT.canvas.width) );
+		var y = Math.round( ((o_evt.clientY - rect.top) / (rect.bottom - rect.top ) * GlydeRT.canvas.height) );
 		return ExtGlyde.getLabelForButtonAt( x, y );
   },
   

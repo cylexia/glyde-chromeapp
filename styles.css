@@ -14,6 +14,7 @@ DIV#launcher_title {
   background: #ddd;
   margin-bottom: 5px;
   text-align: center;
+  border-bottom: 2px solid #888;
 }
 
 DIV#launcher_title H1 {
@@ -53,13 +54,12 @@ DIV#runtimeview CANVAS {
   /* vendor specific for app due to no chrome: 
       (use "no-drag" on buttons etc. inside titlebar) */
   -webkit-app-region: drag; 
-  background: #ccc;
-  border-bottom: 2px solid #777;
-  margin: 0 0 3px 0;
-  padding: 5px;
-  text-align: left;
+  background: #ddd;
+  text-align: center;
+  border-bottom: 2px solid #888;  margin: 0 0 3px 0;
+  padding: 8px;
   position: relative;
-  display: none;
+  display: block;
 }
 
 .windowwidgets {
@@ -67,6 +67,7 @@ DIV#runtimeview CANVAS {
   right: 0px;
   top: 0px;
   padding: 5px;
+  display: none;
 }
 
 .windowwidget {

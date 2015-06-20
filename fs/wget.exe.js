@@ -43,3 +43,6 @@ var WgetExe = {
 };
   
 GluePlatform.setExecApp( "wget", WgetExe );
+if( FS ) {
+  FS.notifyLoaded( "wget.exe.js" );
+}

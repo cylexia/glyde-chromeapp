@@ -137,6 +137,9 @@ var ExtGlyde = {
 				  tb_title.removeChild( tb_title.childNodes[0] );
 				  _.at( tb_title, wc );
 				}
+				if( window ) {
+				  window.title = wc;
+				}
 				return 1;
 
 			} else if( cmd == "doaction" ) {

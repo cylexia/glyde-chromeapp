@@ -1,9 +1,5 @@
 // "use strict";
 
-function _log( s_text ) {
-  _.e( "log" ).value += (s_text + "\n");
-}
-
 var GlydeRT = {
 		canvas: null,
 		glue: {},
@@ -23,7 +19,6 @@ var GlydeRT = {
 	      _.e( ("widget_minimise" + idx) ).addEventListener( "click", GlydeRT._minimiseWindow, false );
         idx++;
       }
-_log( "running: " + document.location.hash.substr( 1 ) );		  
 		  // we need the config, load it and pass on to next method
 		  // TODO: a "loading" box?
       var xhr = new XMLHttpRequest();
@@ -52,7 +47,6 @@ _log( "running: " + document.location.hash.substr( 1 ) );
           // load the file list and pass control to the next stage
           FS.init( "/fs/" );
           FS.loadFileSystemFromString( download.join( "\n" ), GlydeRT.startWithFileSystem );
-          
         } else {
           // TODO: show an error page
         }
@@ -72,7 +66,6 @@ _log( "running: " + document.location.hash.substr( 1 ) );
 		},
 
 	  runApp: function( s_id ) {
-_log( "runApp:" + s_id )	    ;
       // reset the title of the runtime toolbar
 			var tb_title = _.e( "tb_title" );
 		  tb_title.removeChild( tb_title.childNodes[0] );

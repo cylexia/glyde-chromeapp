@@ -94,7 +94,7 @@ var GlydeLauncher = {
           bounds: {width: 800, height: 600},
           resizable: false,
           frame: {
-            type: "none"
+            //type: "none"
           }
         }
       );

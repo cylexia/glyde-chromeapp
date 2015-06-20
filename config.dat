@@ -1,9 +1,9 @@
 # Glyde Startup Config                                                        ;
 
-# External applications;
-exe=browse.exe;
-exe=ui.exe;
-exe=wget.exe;
+# External applications/scripts;
+script=browse.exe.js;
+script=ui.exe.js;
+script=wget.exe.js;
 
 # Available apps;
 #app=com_test_girls;

@@ -23,67 +23,64 @@ var GlydeLauncher = {
     if( this.readyState == 4 ) {    // OK
       if( this.status == 200 ) {
         GlydeLauncher._config = Utils.loadSimpleConfig( this.responseText );
-        GlydeLauncher.layoutLauncher();
+        GlydeLauncher.loadAppFiles();
       } else {
         // TODO: show an error page
       }
     }
 	},
     
+  loadAppFiles: function() {
+    GlueFileManager.init();     // we'll be needing this since FS saves into it
+    
+    var apps = Utils.split( Dict.valueOf( GlydeLauncher._config, "app" ), "\n" );
+    // get all the files the apps reference, we could just get the icons and ".app"
+    //  files if we ever need to reduce resources
+    var files = [], appfiles;
+    for( var i = 0; i < apps.length; i++ ) {
+      files.push( "path=;" );
+      files.push( ("text=" + apps[i] + ".app;") );
+      appfiles = Utils.split( Dict.valueOf( GlydeLauncher._config, apps[i] ), "\n" );
+      for( var ai = 0; ai < appfiles.length; ai++ ) {
+        files.push( (appfiles[ai] + ";") );
+      }
+    }
+
+    FS.init( "/fs/" );
+    FS.loadFileSystemFromString( files.join( "\n" ), GlydeLauncher.layoutLauncher );
+  },
+  
   layoutLauncher: function() {
-      var apps = Utils.split( Dict.valueOf( GlydeLauncher._config, "app" ), "\n" );
-      var launcher = _.e( "launcherview" );
-      console.log( apps );
-      return
-      
-    var files = GlueFileManager.listFiles( "" );    // "" is root path in this case, although all files are returned anyway...
-    if( files ) {
-      var apps = [], i, path;
-      for( i = 0; i < files.length; i++ ) {
-        path = files[i];
-        if( path.substr( (path.length - 4) ) == ".app" ) {
-          apps.push( path );
+    var apps = Utils.split( Dict.valueOf( GlydeLauncher._config, "app" ), "\n" );
+    var launcher = _.e( "launcherview" );
+
+    if( apps.length > 0 ) {
+      for( i = 0; i < apps.length; i++ ) {
+        path = (apps[i] + ".app");
+        var app = Glyde.App.create( GlueFileManager.readText( path ) );
+        var el = _.c( "div",
+            { "border": "1px solid black",
+                "margin-bottom": "2px",
+                "cursor": "pointer"
+              },
+            { "glyde.appfile": path }
+          );
+        var icon;
+        var icon_src = GlueFileManager.readBinary( Glyde.App.getIconFile( app ) );
+        if( icon_src ) {
+          icon = icon_src;
+        } else {
+          icon = _.c( "img", {}, { "src": "assets/glyde128.png" } );
         }
-      }
-      if( (apps.length == 1) && Glyde.run_standalone ) {
-        // we only have the one file, we'll just run it and forget the launcher
-        Glyde.runApp( apps[0] );
-        return;
-      }
-      if( apps.length > 0 ) {
-        for( i = 0; i < apps.length; i++ ) {
-          path = apps[i];
-          var app = Glyde.App.create( GlueFileManager.readText( path ) );
-          var el = _.c( "div",
-              { "border": "1px solid black",
-                  "margin-bottom": "2px",
-                  "cursor": "pointer"
-                },
-              { "glyde.appfile": path }
-            );
-          var icon;
-          var icon_src = GlueFileManager.readBinary( Glyde.App.getIconFile( app ) );
-          if( icon_src ) {
-            icon = icon_src;
-          } else {
-            icon = _.c( "img", {}, { "src": "assets/glyde128.png" } );
-          }
-          _.s( icon, { "width": "64px", "height": "64px", "vertical-align": "middle", "margin-right": "10px" } );
-          el.appendChild( icon );
-          el.appendChild( document.createTextNode( Glyde.App.getTitle( app ) ) );
-          el.addEventListener( "click", Glyde._launchFromClick, false );
-          launcher.appendChild( el );
-        }
-        // enable the back button and attach the handler
-        var back = _.e( "tb_back" );
-        _.s( back, { "display": "inline" } );
-        back.addEventListener( "click", Glyde.reshowLauncher );
-      } else {
-        launcher.appendChild( document.createTextNode( "No Apps" ) );
+        _.s( icon, { "width": "64px", "height": "64px", "vertical-align": "middle", "margin-right": "10px" } );
+        el.appendChild( icon );
+        el.appendChild( document.createTextNode( Glyde.App.getTitle( app ) ) );
+        el.addEventListener( "click", GlydeLauncher._launchFromClick, false );
+        launcher.appendChild( el );
       }
     } else {
-      // TODO: warn unable to list files
-    }    
+      launcher.appendChild( document.createTextNode( "No Apps" ) );
+    }
 	},
   		
   runApp: function( s_id ) {
@@ -173,53 +170,6 @@ var GlydeLauncher = {
     if( this["glyde.appfile"] ) {
       var file = this["glyde.appfile"];
       Glyde.runApp( file );
-    }
-  },
-			
-  App: {
-    create: function( s_src ) {
-			var e, s = 0;
-			var key, value;
-			var data = Dict.create(), vars = Dict.create();
-			while( (e = s_src.indexOf( ";", s )) > -1 ) {
-			  var line = s_src.substr( s, (e - s) ).trim();
-			  s = (e + 1);
-				e = line.indexOf( "=" );
-				if( (e > -1) && (line.length > 0) && (line.charAt( 0 ) != "#") ) {
-					key = line.substring( 0, e );
-					value = line.substring( (e + 1) );
-					if( key == "var" ) {
-    				e = value.indexOf( "=" );
-    				if( e > -1 ) {
-    					Dict.set( vars, value.substring( 0, e ), value.substring( (e + 1) ) );
-    				}
-					} else {
-					  Dict.set( data, key, value );
-					}
-				}
-			}
-			Dict.set( data, "var_dict", vars );
-      return data;
-    },
-  
-    getTitle: function( d_app ) {
-      return Dict.valueOf( d_app, "title" );
-    },
-    
-    getScriptFile: function( d_app ) {
-      return Dict.valueOf( d_app, "script" );
-    },
-  
-    getIconFile: function( d_app ) {
-      return Dict.valueOf( d_app, "icon" );
-    },
-    
-    getIncludeFiles: function( d_app ) {      // comma separated list? or multiple include keys makes an array/indexed dict?
-      return Dict.valueOf( d_app, "include" );
-    },
-    
-    getVarsMap: function( d_app ) {   // Dict
-      return Dict.valueOf( d_app, "var_dict" );
     }
   }
 };

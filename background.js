@@ -69,8 +69,8 @@ var CylexiaApp = {
   
   _startLauncher: function() {
     chrome.app.window.create(
-      'glydelauncher.html',
-      //'gtest.html',       // XXX: this is just to test the glue changes
+      //'glydelauncher.html',
+      'gtest.html',       // XXX: this is just to test the glue changes
       {
         id: 'launcherWindow',
         bounds: {width: 600, height: 600},

@@ -57,14 +57,14 @@ var GlydeLauncher = {
     if( apps.length > 0 ) {
       for( i = 0; i < apps.length; i++ ) {
         path = (apps[i] + ".app");
-        var app = Glyde.App.create( GlueFileManager.readText( path ) );
+        var app = Glyde.App.create( path );
         var el = _.c( "div",
             { 
               "margin-bottom": "2px",
               "cursor": "pointer"
             },
             { 
-              "glyde.appfile": path,
+              "glyde.app": app,
               "className": "launcher_button"
             }
           );
@@ -88,19 +88,8 @@ var GlydeLauncher = {
 
   _launchFromClick: function( o_evt ) {
     // as this is an event handler "this" will point to the element calling it
-    if( this["glyde.appfile"] ) {
-      var file = this["glyde.appfile"];
-      chrome.app.window.create(
-        ('glydert.html#' + file),
-        {
-          id: (file + "window"),
-          bounds: {width: 800, height: 600},
-          resizable: false,
-          frame: {
-            //type: "none"
-          }
-        }
-      );
+    if( this["glyde.app"] ) {
+      Glyde.startApp( this["glyde.app"] );
     }
   }
 };

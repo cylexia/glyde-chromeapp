@@ -1,4 +1,4 @@
-f.setTitle "LightSwitch" 
+f.setTitle "" 
 f.setWidth 400 height 400 backgroundcolour "#ffffff"
 
 f.loadResource "com.cylexia.g.lightswitch/res.map" as "res"

@@ -1,6 +1,6 @@
 :START
     f.setWidth 500 height 500
-	f.setTitle "Day Age Calulator"
+	f.setTitle ""
 
 	f.loadResource "srh_dno/main.map" as "res"
 	

@@ -183,7 +183,14 @@ var ExtGlyde = {
 			} else if( cmd == "paintfilledrectas" ) {
 				return ExtGlyde.paintRectAs( wc, w, true );
 
-				// TODO: rects and boxes (eg. filled rect)
+			} else if( cmd == "exit" ) {
+			  if( chrome && chrome.app ) {
+			    chrome.app.window.current().close();
+			  } else if( window ) {
+			    window.close();
+			  }
+			  return Glue.PLUGIN_DONE_EXIT_ALL;
+			
 			} else {
 				return -1;
 			}

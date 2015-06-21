@@ -1,10 +1,13 @@
 # test for ui
 
 f.setTitle "Test App"
+f.setViewWidth 400 height 400
+
 f.writeAs "info" atX 10 atY 10 value "Info" onClickGoto :INFO
 f.writeAs "choose" atX 10 atY 40 value "Choose" onClickGoto :CHOOSE
 f.writeAs "ask" atX 10 atY 70 value "Ask" onClickGoto :ASK
 f.writeAs "stop_timers" atX 10 atY 120 value "Stop All Timers" onClickGoto :STOP_ALL
+f.writeAs "exit" atX 380 atY 5 value "[X]" onClickGoto :EXIT
 
 # timer test
 N = @ 0
@@ -33,7 +36,9 @@ stop
   f.writeAs "error" atX 0 atY 0 colour "#f00" value "Failed"
   stop
 
-
+:EXIT
+  f.exit
+  stop
 
 
 

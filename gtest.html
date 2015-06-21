@@ -1,0 +1,14 @@
+<html><head>
+  <script src="lib/libglue.js"></script>
+  <script src="gtest.js"></script>
+</head><body>
+  <button id="test">Test</button><br />
+  <textarea id="in" cols="80" rows="20">#test
+X = @ 2
+Y = @ 4
+Z = eval X + Y
+echo Z
+LARGE = testIf Z > 10
+(LARGE) echo "large number"
+  </textarea>
+</body></html>

@@ -4,11 +4,12 @@
 </head><body>
   <button id="test">Test</button><br />
   <textarea id="in" cols="80" rows="20">#test
-X = @ 2
-Y = @ 4
-Z = eval X + Y
-echo Z
-LARGE = testIf Z > 10
-(LARGE) echo "large number"
+echo "started"
+X = @ 10
+:LOOP
+echo X
+X = decrease X by 1
+(X) goto :LOOP
+echo "stopped"
   </textarea>
 </body></html>

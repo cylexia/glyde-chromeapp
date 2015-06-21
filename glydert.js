@@ -78,6 +78,7 @@ var GlydeRT = {
   	    
   	      //  TODO: "includes" need to be parsed and added to the start/end of the script
   				Glue.load( GlydeRT.glue, main_script, vars );
+  				GlydeRT._showRuntime();
   				Glue.run( GlydeRT.glue );
   	    } else {
   	      // TODO: warn of unable to load script
@@ -89,6 +90,11 @@ var GlydeRT = {
 
   getRuntimeDiv: function() {
     return _.e( "runtimeview" );
+  },
+  
+  _showRuntime: function() {
+    _.se( "loadview", { "display": "none" } );
+    _.se( "runtimeview", { "display": "block" } );
   },
 
   /** Event handling **/

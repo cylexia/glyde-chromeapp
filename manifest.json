@@ -15,6 +15,7 @@
     "background": { 
       "scripts": [ 
         "lib/libcore.js",
+        "glydecommon.js",
         "background.js" 
       ]
     }

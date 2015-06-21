@@ -32,8 +32,7 @@ var GlydeRT = {
       if( this.readyState == 4 ) {    // OK
         if( this.status == 200 ) {
           var config = Utils.loadSimpleConfig( this.responseText );
-          var app = document.location.hash;
-          app = app.substr( 1, (app.length - 5) );
+          var app = document.location.hash.substr( 1 );
           var download = [], i;
           var scripts = Utils.split( Dict.valueOf( config, "script" ), "\n" );
           for( i = 0; i < scripts.length; i++ ) {
@@ -62,16 +61,15 @@ var GlydeRT = {
 			
 			Glue.attachPlugin( GlydeRT.glue, ExtGlyde );
 			
-			GlydeRT.runApp( document.location.hash.substr( 1 ) );
+			GlydeRT.runApp( (document.location.hash.substr( 1 ) + ".app") );
 		},
 
-	  runApp: function( s_id ) {
+	  runApp: function( s_appfile ) {
       // reset the title of the runtime toolbar
 			var tb_title = _.e( "tb_title" );
 		  tb_title.removeChild( tb_title.childNodes[0] );
 		  _.at( tb_title, "Glyde" );
-
-	    var app = Glyde.App.create( GlueFileManager.readText( s_id ) );
+	    var app = Glyde.App.create( s_appfile );
 	    if( app ) {
   	    var script_file = Glyde.App.getScriptFile( app );
   	    var main_script = GlueFileManager.readText( script_file );

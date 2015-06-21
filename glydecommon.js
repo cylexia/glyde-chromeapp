@@ -11,8 +11,6 @@ var Glyde = {
       file = file.substr( 0, (file.length - 4) );   // remove the ".app"
     }
     var win = Glyde.App.getWindowDict( o_app );
-console.log( "config: " );
-console.log( o_app );
     var bounds = { "width": 800, "height": 600 }, frame = {}, rnd = "";
     var sizable = true;
     if( Dict.containsKey( win, "chrome" ) ) {

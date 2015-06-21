@@ -132,15 +132,7 @@ var ExtGlyde = {
 			if( (cmd == "setwidth") || (cmd == "setviewwidth") ) {
 				return ExtGlyde.setupView( w );
 			} else if( cmd == "settitle" ) {
-				var tb_title = _.e( "tb_title" );
-				if( tb_title ) {
-				  tb_title.removeChild( tb_title.childNodes[0] );
-				  _.at( tb_title, wc );
-				}
-				if( window ) {
-				  window.title = wc;
-				}
-				return 1;
+				return ExtGlyde.setTitle( wc, w );
 
 			} else if( cmd == "doaction" ) {
 				return ExtGlyde.doAction( wc, w );
@@ -316,6 +308,20 @@ var ExtGlyde = {
 		ExtGlyde.setSize( Dict.intValueOf( w, Dict.valueOf( w, "_" ) ), Dict.intValueOf( w, "height" ) );
 		return true;
 	},
+
+  setTitle: function( wc, w ) {
+    var tb_title = _.e( "tb_title" );
+		if( tb_title ) {
+		  tb_title.removeChild( tb_title.childNodes[0] );
+		  _.at( tb_title, wc );
+		}
+		if( window ) {
+		  window.title = wc;
+		  document.title = wc;
+		}
+		_.e( "windowtitlebar" ).style["display"] = (wc ? "block" : "none");
+		return 1;
+  },
 
 	clearUI: function() {
 		ExtGlyde.button_sequence = [];

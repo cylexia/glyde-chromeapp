@@ -12,6 +12,7 @@ var GlueTestSuite = {
   start: function() {
     document.getElementById( "run" ).addEventListener( "click", GlueTestSuite.runScript, false );
     GlueTestSuite._addTestLoadButton( "Core", "/glue-tests/core.test" );
+    GlueTestSuite._addTestLoadButton( "ExtPlatform", "/glue-tests/platform.test" );
   },
 
   runScript: function() {

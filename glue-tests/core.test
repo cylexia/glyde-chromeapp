@@ -42,6 +42,23 @@
   echo " " & X
   echo "\n--\n"
   
+#--------------
+# strings
+#   hello,world! | 6 | 3 -1 3
+
+  X = @ "world!hello,test"
+  W = cropRightOffOf X at 6
+  H = cropLeftOffOf X at 6
+  H = cropRightOffOf H at 6
+  echo H & W && " | "
+  L = getLengthOf W
+  echo L & " | "
+  X = findIndexOf "l" in W
+  Y = findIndexOf "L" in W
+  Z = findIndexOf "L" in W ignorecase 1
+  echo X & " " && Y &&& " " &&&& Z
+  echo "\n--\n"
+
     
 #--------------    
 # setPart, getPart, setParts and getParts

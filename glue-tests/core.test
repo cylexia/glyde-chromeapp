@@ -95,7 +95,7 @@
   
 #--------------
 # testIf
-#   110011 110011 1001
+#   110011 110011 1001 0 1
   X = @ 5
   Y = @ 10
   Z = testIf X = 5
@@ -132,6 +132,12 @@
   Z = testIf A is "HELLO"
   echo Z
   Z = testIf A isNot "HELLO"
+  echo Z
+  echo " "
+  Z = not Z
+  echo Z
+  echo " "
+  Z = not Z
   echo Z
   echo "\n--\n"
   

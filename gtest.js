@@ -8,7 +8,12 @@ function runscript() {
   var script = document.getElementById( "in" ).value;
   var g = {};
   Glue.init( g );
+  Glue.setStdOut( goutput );
   Glue.load( g, script );
   Glue.run( g );
   
+}
+
+function goutput( s_str ) {
+  document.getElementById( "out" ).value += s_str;
 }

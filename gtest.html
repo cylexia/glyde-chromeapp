@@ -4,12 +4,146 @@
 </head><body>
   <button id="test">Test</button><br />
   <textarea id="in" cols="80" rows="20">#test
-echo "started"
-X = @ 10
-:LOOP
-echo X
-X = decrease X by 1
-(X) goto :LOOP
-echo "stopped"
+
+#--------------
+# assignment, echo (with inbuilt join)
+#   X=2, Y=4
+#   X=4, Y=5
+#   Z=4
+
+  X = @ 2
+  Y = @ 4
+  echo "\nX=" & X && ", Y=" &&& Y
+  X = @ Y
+  Y = @ 5
+  echo "\nX=" & X && ", Y=" &&& Y
+  Z = get@ "X"
+  echo "\nZ=" & Z
+  echo "\n--\n"
+  
+  
+#--------------
+# maths
+#   10 5 6 3 -3 -1
+  
+  X = @ -10
+  X = increase X by 20
+  echo " " & X
+  X = divide X by 2
+  echo " " & X
+  X = decrease X by -1
+  echo " " & X
+  X = multiply X by 0.5
+  echo " " & X
+  X = decrease X by 6
+  echo " " & X
+  X = moddiv X by 2
+  echo " " & X
+  echo "\n--\n"
+  
+    
+#--------------    
+# setPart, getPart, setParts and getParts
+#   Chris, 36
+#   FtitleCMrFsnameHDickens
+
+  X = setPart "title" to "Mr"
+  X = setParts "fname,sname,age" in X fname "Chris" sname "Dickens" age "36"
+  FNAME = getPart "fname" from X
+  AGE = getPart "age" from X
+  echo FNAME & ", " && AGE
+  Y = getParts "title,sname" from X
+  echo "\n" & Y
+  echo "\n--\n"
+  
+  
+#--------------
+# goto, gosub and conditional (also boolean: 0 is false, anything else is true)
+#   10 9 8 7 6 4 5 3 2 1 
+  X = @ 10
+  :LOOP_TEST_START
+    gosub :LOOP_TEST:ECHO
+    X = decrease X by 1
+  (X) goto :LOOP_TEST_START
+  goto :LOOP_TEST_END
+  
+  :LOOP_TEST:ECHO
+    echo X & " "
+    return
+    
+  :LOOP_TEST_END
+  echo "\n--\n"
+  
+  
+#--------------
+# testIf
+#   110011 110011 1001
+  X = @ 5
+  Y = @ 10
+  Z = testIf X = 5
+  echo Z
+  Z = testIf X < Y
+  echo Z 
+  Z = testIf X > Y
+  echo Z
+  Z = testIf X = Y
+  echo Z
+  Z = testIf X <= 5
+  echo Z 
+  Z = testIf Y >= 10
+  echo Z
+  echo " "
+  Z = testIf X is 5
+  echo Z
+  Z = testIf X lt Y
+  echo Z 
+  Z = testIf X gt Y
+  echo Z
+  Z = testIf X is Y
+  echo Z
+  Z = testIf X lte 5
+  echo Z 
+  Z = testIf Y gte 10
+  echo Z
+  echo " "
+  A = @ "HI"
+  Z = testIf A is "HI"
+  echo Z
+  Z = testIf A isNot "HI"
+  echo Z
+  Z = testIf A is "HELLO"
+  echo Z
+  Z = testIf A isNot "HELLO"
+  echo Z
+  echo "\n--\n"
+  
+  
+#--------------
+# while/until, increase and testIf'<
+#   0 1 2 3 4
+#   0 1 2 3 4 5
+  X = @ 0
+  :WHILE_TEST
+    echo X & " "
+    X = increase X by 1
+    # keep going while X < 5
+    CONT = testIf X < 5
+  while CONT goto :WHILE_TEST
+  echo "\n"
+  
+  X = @ 0
+  :UNTIL_TEST
+    echo X & " "
+    X = increase X by 1
+    # stop if X > 5
+    STOP = testIf X > 5
+  until STOP goto :UNTIL_TEST
+  
+  echo "\n--\n"
+  
+  echo "\n"
+  
+echo "** DONE **"
   </textarea>
+  <textarea id="out" cols="80" rows="20"></textarea>
 </body></html>

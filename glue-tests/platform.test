@@ -27,7 +27,7 @@
 #   random number: (a random number 0 >= n > 10)
 
   X = platform.getRandomNumberFrom 0 upTo 10
-  echo "random numer: " & X
+  echo "random number: " & X
   echo "\n--\n"
   
 #--------------
@@ -73,7 +73,7 @@
 #   Chris Dickens, 36
 
   N = @ "platform_test.config"
-  OK = platform.writeToFile N value "age=26\n\n[name]\nf=Chris\ns=Dickens"
+  OK = platform.writeToFile N value "age=36\n\n[name]\nf=Chris\ns=Dickens"
   FAILED = not OK
   (FAILED) echo "!! Unable to write file\n"
   (FAILED) goto :SKIP_CONFIG_TEST
@@ -87,7 +87,7 @@
   SN = getPart "name.s" from Z
   A = getPart "age" from Z
   
-  echo FN & " " && SN &&& ", " &&&& AGE
+  echo FN & " " && SN &&& ", " &&&& A
   :SKIP_CONFIG_TEST
   echo "\n--\n"
   

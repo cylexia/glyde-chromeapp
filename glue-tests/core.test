@@ -63,14 +63,20 @@
 #--------------    
 # setPart, getPart, setParts and getParts
 #   Chris, 36
-#   FtitleCMrFsnameHDickens
+#   (these parts as a single string per line, the order is not important: 
+#     FtitleCMr FfnameFChris FsnameHDickens DageC36 D123D456
+#     FtitleCMr FsnameHDickens)
+#
 
   X = setPart "title" to "Mr"
-  X = setParts "fname,sname,age" in X fname "Chris" sname "Dickens" age "36"
+  X = setParts "fname,sname" in X fname "Chris" sname "Dickens"
+  X = setPart "age" in X to 36
+  X = setPart 123 in X to "456"
   FNAME = getPart "fname" from X
   AGE = getPart "age" from X
   echo FNAME & ", " && AGE
   Y = getParts "title,sname" from X
+  echo "\n" & X
   echo "\n" & Y
   echo "\n--\n"
   

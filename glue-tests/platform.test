@@ -1,0 +1,84 @@
+# ExtPlatform (platform.) Test Suite
+# (c)2015 by Chris Dickens
+#
+# MIT License
+#
+
+#--------------
+# environment variables
+#   passed
+
+  platform.setEnvironmentVariable "test_var" to "passed"
+  X = platform.getEnvironmentVariable "test_var"
+  echo X
+  echo "\n--\n"
+  
+
+#--------------
+# date serial
+#   (today's date as "YYYYMMDDHHIISS")
+
+  X = platform.getDateSerial
+  echo X
+  
+  
+#--------------
+# random number
+#   (a random number 0 >= n > 10)
+
+  X = platform.getRandomNumberFrom 0 upTo 10
+  echo X
+  
+  
+#--------------
+# get platform ID
+#   (the platform ID, some are: js, php, windows, linux, android)
+
+  X = platform.getId
+  print X
+  
+
+#--------------
+# file support
+#   testing
+#   (a list of one or more files, "platform_test.txt" must be one)
+
+  N = @ "platform_test.txt"
+  OK = platform.writeToFile N value "testing"
+  FAILED = not OK
+  (FAILED) echo "!! Unable to write file"
+  (FAILED) goto :SKIP_FILE_TEST
+  
+  X = platform.readFromFile N
+  echo X & "\n"
+  LIST = platform.listFilesIn ""
+  COUNT = getPart "count" in LIST
+  :FILE_LIST_LOOP
+    COUNT = decrease COUNT by 1
+    F = getPart COUNT in LIST
+    echo F & "\n"
+  (COUNT) goto :FILE_LIST_LOOP
+  :SKIP_FILE_TEST
+  echo "\n--\n"
+
+
+#--------------
+# config file support
+#   Chris Dickens, 36
+
+  N = "platform_test.config"
+  OK = platform.writeToFile N value "age=26\n\n[name]\nf=Chris\ns=Dickens"
+  FAILED = not OK
+  (FAILED) echo "!! Unable to write file"
+  (FAILED) goto :SKIP_CONFIG_TEST
+  
+  Z = platform.loadConfigFrom N
+  FN = getPart "name.f" from Z
+  SN = getPart "name.s" from Z
+  A = getPart "age" from Z
+  
+  echo FN & " " && SN &&& ", " &&&& AGE
+  echo "\n--\n"
+  
+#							case 'exec':
+#							case 'browseto':

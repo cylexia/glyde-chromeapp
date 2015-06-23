@@ -90,6 +90,40 @@
   echo FN & " " && SN &&& ", " &&&& A
   :SKIP_CONFIG_TEST
   echo "\n--\n"
+
+#--------------
+# exec test
+#
+
+  :EXEC1
+  platform.exec "test.exe" withArgs "Hello, world!" onDoneGoto :EXEC1:OK onErrorGoto :EXEC1:ERR
+  stop
+  
+  :EXEC1:OK
+    X = platform.readFromFile "exec.txt"
+    echo "Exec1: " & X && "\n"
+    goto :EXEC2
+    
+  :EXEC1:ERR
+    echo "Exec1: ** FAILED **\n"
+    goto :EXEC2
+    
+  
+  :EXEC2
+  platform.exec "missing-app.exe" withArgs "" onDoneGoto :EXEC2:OK onErrorGoto :EXEC2:ERR
+  # stop - exec should stop, we'll not do it manually to test this
+  
+  :EXEC2:OK
+    echo "Exec2: exec responded with OK or fell through, this FAILS this test\n"
+    goto :EXEC_DONE
+    
+  :EXEC2:ERR
+    echo "Exec2: Failed to execute - this is a PASS\n"
+    goto :EXEC_DONE
+  
+  :EXEC_DONE
+  echo "\n--\n"
+  
   
 #							case 'exec':
 #							case 'browseto':

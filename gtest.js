@@ -5,6 +5,7 @@ var GlueTestSuite = {
   init: function() {
     if( !GlueTestSuite._inited ) {
       GlueFileManager.init();           // needed for platform's file system commands
+      GluePlatform.setExecApp( "test.exe", GlueTestSuite );    // register our "test.exe"
       GlueTestSuite._inited = true;
     }
     return true;
@@ -59,7 +60,19 @@ var GlueTestSuite = {
         document.getElementById( "in" ).value = "** unable to load script **";
       }
     }
-	}
+	},
+	
+	
+	// This provides the ability to test exec, it simply reverses whatever is
+	//  given as it's parameters and writes it to "exec.txt"
+  glueExec: function( o_glue, s_args, s_done_label, s_error_label ) {
+    var i, n = "", c = s_args.length;
+    while( --c >= 0 ) {
+      n += s_args.charAt( c );
+    }
+    GlueFileManager.writeText( "exec.txt", n );
+    return true;    // GluePlatform will redirect to ondonegoto itself
+  }
 };
 
 if( GlueTestSuite.init() ) {

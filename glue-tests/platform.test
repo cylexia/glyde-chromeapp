@@ -92,7 +92,10 @@
   echo "\n--\n"
 
 #--------------
-# exec test
+# exec, both of valid app and missing one (with error handler).  Also that
+# exec should stop the script
+#   Exec1: !dlrow ,olleH
+#   Exec2: Failed to execute - this is a PASS
 #
 
   :EXEC1
@@ -123,7 +126,12 @@
   
   :EXEC_DONE
   echo "\n--\n"
+
+#--------------
+# browseto
+#   (google.com should open - it is valid to show an error message and continue,
+#   if browsing would make no sense/is unavailable)
+#
+
+  platform.browseTo "http://www.google.com"
   
-  
-#							case 'exec':
-#							case 'browseto':

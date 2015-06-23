@@ -17,6 +17,7 @@ var GlueTestSuite = {
   },
 
   runScript: function() {
+    document.getElementById( "out" ).value = "";
     var script = document.getElementById( "in" ).value;
     var g = {};
     Glue.init( g );

@@ -4,6 +4,7 @@ var GlueTestSuite = {
   
   init: function() {
     if( !GlueTestSuite._inited ) {
+      GlueFileManager.init();           // needed for platform's file system commands
       GlueTestSuite._inited = true;
     }
     return true;

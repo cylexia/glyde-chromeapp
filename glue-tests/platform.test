@@ -20,15 +20,15 @@
 
   X = platform.getDateSerial
   echo X
-  
+  echo "\n--\n"
   
 #--------------
 # random number
-#   (a random number 0 >= n > 10)
+#   random number: (a random number 0 >= n > 10)
 
   X = platform.getRandomNumberFrom 0 upTo 10
-  echo X
-  
+  echo "random numer: " & X
+  echo "\n--\n"
   
 #--------------
 # get platform ID
@@ -36,6 +36,7 @@
 
   X = platform.getId
   print X
+  echo "\n--\n"
   
 
 #--------------
@@ -78,6 +79,7 @@
   A = getPart "age" from Z
   
   echo FN & " " && SN &&& ", " &&&& AGE
+  :SKIP_CONFIG_TEST
   echo "\n--\n"
   
 #							case 'exec':

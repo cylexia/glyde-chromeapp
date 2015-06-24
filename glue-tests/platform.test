@@ -32,7 +32,7 @@
   
 #--------------
 # get platform ID
-#   (the platform ID, some are: js, php, windows, linux, android)
+#   (the platform ID, some are: js, js/chrome_app, php, windows, linux, android)
 
   X = platform.getId
   print X

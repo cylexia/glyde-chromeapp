@@ -8,6 +8,7 @@ var Glyde = {
     xhr.onreadystatechange = Glyde._startAppWithWebDef;
     xhr.open( "GET", s_webdef, true );
     xhr.send();
+console.log( "trying to download " + s_webdef );
   },
   
   _startAppWithWebDef: function() {
@@ -28,9 +29,12 @@ var Glyde = {
           xhr.open( "GET", url, true );
           xhr.send();
         } else {
+          console.log( "_startAppWithWebDef: Invalid definition: " + this.responseText );
+          console.log( config );
           // TODO: error: invalid definition
         }
       } else {
+        console.log( "_startAppWithWebDef: Unable to download definition" );
         // TODO: error: unable to download definition
       }
     }

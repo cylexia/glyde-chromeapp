@@ -69,7 +69,8 @@ var CylexiaApp = {
   
   _startLauncher: function() {
     chrome.app.window.create(
-      'glydelauncher.html',
+      "localfs.html",
+      //'glydelauncher.html',
       {
         id: 'launcherWindow',
         bounds: {width: 600, height: 600},

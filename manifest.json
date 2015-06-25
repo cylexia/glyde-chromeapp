@@ -22,6 +22,10 @@
   },
   
   "permissions": [
-    "http://*/"
+    "http://*/",
+    "storage",
+    { "fileSystem": 
+      [ "write", "retainEntries", "directory" ]
+    } 
   ]
 }

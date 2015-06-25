@@ -112,8 +112,13 @@ var ExtGlyde = {
 	 *
 	 * @param g the instance being attached to
 	 */
-	glueAttach: function( g ) {
-		//
+	glueAttach: function( f_plugin, f_glue ) {
+    window.addEventListener( "keydown", function( e ) { 
+        ExtGlyde._keyDownHandler( f_glue, (e || window.event) ); 
+      } );
+    window.addEventListener( "keypress", function( e ) {
+        ExtGlyde._keyPressHandler( f_glue, (e || window.event) );
+      } );
 	},
 
 	/**
@@ -158,7 +163,10 @@ var ExtGlyde = {
 				if( ExtGlyde.keys === null ) {
 					ExtGlyde.keys = Dict.create();
 				}
-				Dict.set( ExtGlyde.keys, wc, Dict.valueOf( w, "goto" ) );
+				var ke = Dict.create();
+				Dict.set( ke, "label", Dict.valueOf( w, "goto" ) );
+				Dict.set( ke, "id", Dict.valueOf( w, "useid" ) );
+				Dict.set( ExtGlyde.keys, wc, ke );
 
 			} else if( cmd == "starttimer" ) {
 			  ExtGlyde._startTimer( glue, wc, Dict.intValueOf( w, "interval" ), Dict.valueOf( w, "ontickgoto" ) );
@@ -197,38 +205,6 @@ var ExtGlyde = {
 			return 1;
 		}
 		return 0;
-	},
-
-	tryKeyAction: function( keycode, event ) {
-		if( ExtGlyde.keys === null ) {
-			return null;
-		}
-		var keyname;
-		switch( keycode ) {
-			case KeyEvent.KEYCODE_DPAD_UP:
-				keyname = "direction_up";
-				break;
-			case KeyEvent.KEYCODE_DPAD_LEFT:
-				keyname = "direction_left";
-				break;
-			case KeyEvent.KEYCODE_DPAD_DOWN:
-				keyname = "direction_down";
-				break;
-			case KeyEvent.KEYCODE_DPAD_RIGHT:
-				keyname = "direction_right";
-				break;
-			case KeyEvent.KEYCODE_DPAD_CENTER:
-			case KeyEvent.KEYCODE_BUTTON_A:
-				keyname = "direction_fire";
-				break;
-			default:
-				keyname = String.valueOf( keycode );
-				break;
-		}
-		if( keyname in keys ) {
-			return keys[keyname];
-		}
-		return null;
 	},
 
 	getLabelForButtonAt: function( i_x, i_y ) {
@@ -573,7 +549,38 @@ var ExtGlyde = {
     }
     ExtGlyde.timers = null;
   },
+  
+  // keyboard handling
+  _keyDownHandler: function( f_glue, e ) {
+    e = (e || window.event);
+    var kmap = { 
+        37: "direction_left", 38: "direction_up", 39: "direction_right",
+        40: "direction_down", 27: "escape"
+      };
+    if( e.keyCode in kmap ) {
+      if( ExtGlyde._notifyKeyPress( f_glue, kmap[e.keyCode] ) ) {
+        e.preventDefault();
+      }
+    }
+  },
 
+  _keyPressHandler: function( f_glue, e ) {
+    e = (e || window.event );
+    if( ExtGlyde._notifyKeyPress( f_glue, String.fromCharCode( e.charCode ) ) ) {
+      e.preventDefault();
+    }
+  },
+
+  _notifyKeyPress: function( f_glue, s_key ) {      // boolean
+    if( ExtGlyde.keys && (s_key in ExtGlyde.keys) ) {
+      var ke = ExtGlyde.keys[s_key];
+      ExtGlyde.last_action_id = Dict.valueOf( ke, "id" );
+      Glue.run( f_glue, Dict.valueOf( ke, "label" ) );
+      return true;
+    }
+    return false;
+  },
+  
 	/**
 	 * Stores a button
 	 */

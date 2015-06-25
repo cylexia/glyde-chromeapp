@@ -9,7 +9,7 @@ BODY {
 }
 */
 
-DIV#launcher_title {
+.bigtitle {
   padding: 5px;
   background: #ddd;
   margin-bottom: 5px;
@@ -17,7 +17,7 @@ DIV#launcher_title {
   border-bottom: 2px solid #888;
 }
 
-DIV#launcher_title H1 {
+.bigtitle H1 {
   margin: 0 0 3px 0;
   padding: 0;
 }

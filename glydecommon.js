@@ -1,57 +1,101 @@
 var Glyde = {
   // utilties class
   
-  startApp: function( o_app ) {
-    var file = Glyde.App.getFile( o_app );
-    var i = file.lastIndexOf( "/" );
-    if( i > -1 ) {
-      file = file.substr( i );                      // remove the path
-    }
-    if( file.substr( (file.length - 4) ) == ".app" ) {
-      file = file.substr( 0, (file.length - 4) );   // remove the ".app"
-    }
-    var win = Glyde.App.getWindowDict( o_app );
-    var bounds = { "width": 800, "height": 600 }, frame = {}, rnd = "";
-    var sizable = true;
-    if( Dict.containsKey( win, "chrome" ) ) {
-      if( Dict.valueOf( win, "chrome" ).substr( 0, 2 ) == "no" ) {  // no|none|nothing
-        frame["type"] = "none";
-        sizable = false;
-      }
-    }
-    if( Dict.containsKey( win, "left" ) ) {
-      bounds["left"] = Dict.intValueOf( win, "left" );
-      bounds["top"] = Dict.intValueOf( win, "top" );
-      rnd += Math.random();      // ensures a different ID so previously saved location will not be used
-    }
-    if( Dict.containsKey( win, "width" ) ) {
-      bounds["width"] = Dict.intValueOf( win, "width" );
-      bounds["height"] = Dict.intValueOf( win, "height" );
-      rnd += Math.random();      // ensures a different ID so previously saved location will not be used
-    }
-    chrome.app.window.create(
-      ('glydert.html#' + file),
-      {
-        "id": (file + "window" + rnd),
-        "innerBounds": bounds,
-        "resizable": sizable,
-        "frame": frame
-      }
-    );
+  startApp: function( s_webdef ) {
+    // we are given a definition, this needs to be loaded
+    var xhr = new XMLHttpRequest();
+    xhr["glyde.webdef"] = s_webdef;
+    xhr.onreadystatechange = Glyde._startAppWithWebDef;
+    xhr.open( "GET", s_webdef, true );
+    xhr.send();
   },
   
-  App: {
-    create: function( s_file, s_src ) {
-      if( !s_src ) {
-        s_src = GlueFileManager.readText( s_file );
+  _startAppWithWebDef: function() {
+    // "this" will be the request
+    if( this.readyState == 4 ) {    // OK
+      if( this.status == 200 ) {
+        // we need to know the app file we'll be using, parse the config and 
+        //  then download the file pointed to by the "run" entry
+        var config = Utils.parseSimpleConfig( this.responseText );
+        if( config["run"] ) {
+          var url = config["run"];
+          if( url.charAt( 0 ) == "#" ) {
+            url = chrome.runtime.getURL( url.substr( 1 ) );
+          }
+          var xhr = new XMLHttpRequest();
+          xhr["glyde.webdef"] = this["glyde.webdef"];
+          xhr.onreadystatechange = Glyde._startAppWithApp;
+          xhr.open( "GET", url, true );
+          xhr.send();
+        } else {
+          // TODO: error: invalid definition
+        }
+      } else {
+        // TODO: error: unable to download definition
       }
+    }
+  },
+  
+  _startAppWithApp: function() {
+    // "this" will be the request
+    if( this.readyState == 4 ) {    // OK
+      if( this.status == 200 ) {
+        // we can now load the window information from the app file and open
+        //  the window, passing control to it to load what it needs.
+        var app = Glyde.App.create( this.responseText );
+        var file = Glyde.App.getFile( app );
+        var i = file.lastIndexOf( "/" );
+        if( i > -1 ) {
+          file = file.substr( i );                      // remove the path
+        }
+        if( file.substr( (file.length - 4) ) == ".app" ) {
+          file = file.substr( 0, (file.length - 4) );   // remove the ".app"
+        }
+        var win = Glyde.App.getWindowDict( app );
+        var bounds = { "width": 800, "height": 600 }, frame = {}, rnd = "";
+        var sizable = true;
+        if( Dict.containsKey( win, "chrome" ) ) {
+          if( Dict.valueOf( win, "chrome" ).substr( 0, 2 ) == "no" ) {  // no|none|nothing
+            frame["type"] = "none";
+            sizable = false;
+          }
+        }
+        if( Dict.containsKey( win, "left" ) ) {
+          bounds["left"] = Dict.intValueOf( win, "left" );
+          bounds["top"] = Dict.intValueOf( win, "top" );
+          rnd += Math.random();      // ensures a different ID so previously saved location will not be used
+        }
+        if( Dict.containsKey( win, "width" ) ) {
+          bounds["width"] = Dict.intValueOf( win, "width" );
+          bounds["height"] = Dict.intValueOf( win, "height" );
+          rnd += Math.random();      // ensures a different ID so previously saved location will not be used
+        }
+console.log( ('window: glydert.html#' + this["glyde.webdef"]) );
+        chrome.app.window.create(
+          ('glydert.html#' + encodeURIComponent( this["glyde.webdef"] )),
+          {
+            "id": (file + "window" + rnd),
+            "innerBounds": bounds,
+            "resizable": sizable,
+            "frame": frame
+          }
+        );
+      } else {
+        // TODO: error: unable to load app definition
+      }
+    } else {
+      // TODO: error: unable to load app definition
+    }
+  },
+    
+  App: {
+    create: function( s_src ) {
       if( s_src === null ) {
         return null;
       }
 			var e, s = 0;
 			var key, value;
 			var data = Dict.create(), vars = Dict.create();
-			Dict.set( data, "_file", s_file );
 			while( (e = s_src.indexOf( ";", s )) > -1 ) {
 			  var line = s_src.substr( s, (e - s) ).trim();
 			  s = (e + 1);

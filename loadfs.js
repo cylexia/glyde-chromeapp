@@ -6,7 +6,7 @@ var FS = {
   
   init: function( s_root ) {
     if( !FS._inited ) {
-      FS._root = s_root;
+      FS._root = (s_root ? s_root : "");
       FS._inited = true;
       return true;
     }
@@ -20,7 +20,7 @@ var FS = {
   
   loadFileSystemFromString: function( s_src, f_callback ) {
     FS._done_callback = f_callback;
-    FS._loadFileList( s_src );    
+    FS._loadFileList( s_src );
     FS._getNextFile();
   },
   
@@ -33,7 +33,7 @@ var FS = {
   _makeRequest: function( s_file, f_callback, x_data ) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = f_callback;
-    xhr.open( "GET", chrome.runtime.getURL( s_file ), true );
+    xhr.open( "GET", s_file, true );
     xhr["x-data"] = x_data;
     xhr.send();
   },
@@ -67,6 +67,7 @@ var FS = {
 				} else {
 				  alias = value;
 				}
+				var target = alias;
 				switch( key ) {
 				  case "path":
 			      path = value;
@@ -74,13 +75,13 @@ var FS = {
 				  case "text":
 		      case "script":
 				     FS._files.push( {
-				        "file": (FS._root + path + value), 
-				        "name": (path + alias),
+				        "file": FS._localise( (FS._root + path + value) ), 
+				        "name": target,
 				        "type": key
 				      } );
 				    break;
   			  case "image":
-  			    FS.storeBinaryFile( (path + alias), (FS._root + path + value) );
+  			    FS.storeBinaryFile( target, FS._localise( (FS._root + path + value) ) );
   			    break;
 				}
 			}
@@ -114,6 +115,16 @@ var FS = {
     
   _loadFileFailed: function( m_data ) {
     console.log( "failed to load file: " + m_data["file"] );
+  },
+  
+  _localise: function( s_path ) {
+    if( !s_path ) {
+      return s_path;
+    }
+    if( s_path.charAt( 0 ) == "#" ) {
+      return chrome.runtime.getURL( s_path.substr( 1 ) );
+    }
+    return s_path;
   },
   
 	storeTextFile: function( s_path, a_data ) {

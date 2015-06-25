@@ -1,0 +1,17 @@
+# Web config for lightswitch                                                ;
+
+# External applications/scripts                                             ;
+script=#fs/wget.exe.js;
+
+#   root location of files, Glyde will use this as the root for resources   ;
+root=#fs/;
+
+#   files we need                                                           ;
+image=com.cylexia.g.lightswitch/icon.png;
+image=com.cylexia.g.lightswitch/map.png;
+text=com.cylexia.g.lightswitch/main.script;
+text=com.cylexia.g.lightswitch/res.map;
+
+# File containing the app definition (ignores the above "root" value)       ;
+run=#fs/com.cylexia.g.lightswitch.app;
+

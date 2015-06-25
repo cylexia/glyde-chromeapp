@@ -16,11 +16,10 @@ var CylexiaApp = {
   },
   
   start: function( o_launch_data ) {
-    // Load the config file and restart via the callback
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = CylexiaApp.startFromXHR;
-    xhr.open( "GET", chrome.runtime.getURL( "config.dat" ), true );
-    xhr.send();
+    // there is no launcher, the runtime window will load it's resources
+    //  we just give it the ".glyde" web-definition url
+    Glyde.startApp( chrome.runtime.getURL( "fs/com.cylexia.g.lightswitch.glyde" ) );
+    return;
   },
   
   startFromXHR: function() {

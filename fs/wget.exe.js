@@ -22,22 +22,18 @@ var WgetExe = {
     xhr.open( "GET", url, true );
     xhr["x-data"] = data;
     xhr.send();
-    return true;
+    return false;     // we'll handle resuming
   },
   
   _responseCallback: function() {
     // "this" points to the xmlhttprequest object calling this
     if( this.readyState == 4 ) {    // done
       var data = this["x-data"], label;
-      if( this.status == 200 ) {
-        label = data["done"];
-      } else {
-        label = data["error"];
-      }
       if( data["target"] ) {
         GlueFileManager.writeText( data["target"], this.responseText );
       }
-      Glue.run( data["glue"], label );
+      GluePlatform.execFinished( data["glue"], data["done"] );
+      //Glue.run( data["glue"], label );
     }
   }
 };

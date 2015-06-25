@@ -9,8 +9,11 @@ f.writeAs "ask" atX 10 atY 70 value "Ask" onClickGoto :ASK
 f.writeAs "stop_timers" atX 10 atY 120 value "Stop All Timers" onClickGoto :STOP_ALL
 f.writeAs "exit" atX 380 atY 5 value "[X]" onClickGoto :EXIT
 
+f.onKey "escape" goto :ESC
+
 # timer test
 N = @ 0
+TIMER_ON = @ 1
 f.startTimer "title_timer" interval 10 onTickGoto :TIMER_TEST
 
 stop
@@ -46,9 +49,16 @@ stop
   N = increase N by 1
   DONE = testIf N = 10
   (DONE) f.stopTimer "title_timer"
+  (DONE) TIMER_ON = @ 0
   f.setTitle N
   stop
   
 :STOP_ALL
+  TIMER_ON = @ 0
   f.stopAllTimers
+  stop
+  
+:ESC
+  (TIMER_ON) goto :STOP_ALL
+  f.exit
   stop

@@ -39,7 +39,18 @@
 	f.writeAs "w7" atX 260 y 250 width 230 height 73 value "1 Week Ago" onClickGoto :WEEK_AGO
 	f.writeAs "w14" atX 260 y 330 width 230 height 73 value "2 Weeks Ago" onClickGoto :WEEK_AGO
 	f.writeAs "w21" atX 260 y 410 width 230 height 73 value "3 Weeks Ago" onClickGoto :WEEK_AGO
-	
+
+	f.onKey "0" goto :NUM useId "0"
+	f.onKey "1" goto :NUM useId "1"
+	f.onKey "2" goto :NUM useId "2"
+	f.onKey "3" goto :NUM useId "3"
+	f.onKey "4" goto :NUM useId "4"
+	f.onKey "5" goto :NUM useId "5"
+	f.onKey "6" goto :NUM useId "6"
+	f.onKey "7" goto :NUM useId "7"
+	f.onKey "8" goto :NUM useId "8"
+	f.onKey "9" goto :NUM useId "9"
+
 	return
 	
 :NUM
@@ -80,9 +91,6 @@
 	f.writeAs "value" atX 261 y 99 width 229 height 52 value VALUE
 	return
 
-	
-	
-	
 	
 :CALC_TODAY	
 	gosub :_SETUP_2015

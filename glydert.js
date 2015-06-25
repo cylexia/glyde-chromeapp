@@ -62,7 +62,15 @@ var GlydeRT = {
 			Glue.attachPlugin( GlydeRT.glue, ExtGlyde );
 			
 			GlydeRT.runApp( (document.location.hash.substr( 1 ) + ".app") );
+			//var b = document.createElement( "button" );
+			//b.appendChild( document.createTextNode( "start" ) );
+			//b.addEventListener( "click", GlydeRT.runApp0 );
+			//document.getElementsByTagName( "body" )[0].appendChild( b );
 		},
+
+    runApp0: function() {
+      GlydeRT.runApp( (document.location.hash.substr( 1 ) + ".app") );
+    },
 
 	  runApp: function( s_appfile ) {
       // reset the title of the runtime toolbar

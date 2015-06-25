@@ -39,7 +39,7 @@ var UiExe = {
     }
     
     //Glue.run( o_glue, s_done_label );
-    return true;
+    return false;   // we'll be manually continuing
   },
   
   _ask: function( d_data, s_done_label, s_error_label ) {
@@ -211,7 +211,7 @@ var UiExe = {
       var frame = this["uiexe.frame"];
       frame.parentNode.removeChild( frame );
       UiExe._saveResult( frame["uiexe.data"], true, frame["uiexe.field"].value );
-      Glue.run( UiExe._glue_instance, frame["uiexe.label.done"] );
+      GluePlatform.execFinished( UiExe._glue_instance, frame["uiexe.label.done"] );
   },
   
   _handleAskCancel: function() {

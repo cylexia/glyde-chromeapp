@@ -3,6 +3,9 @@
 // Glyde Glue Plugin
 // (c)2015 by Cylexia, All Rights Reserved
 //
+//  Version: 1.15.0625
+//
+//  MIT License
 
 var ExtGlyde = {
 	GLUE_STOP_ACTION: -200,
